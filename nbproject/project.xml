@@ -6,7 +6,8 @@
             <name>libesp</name>
             <c-extensions/>
             <cpp-extensions/>
-            <header-extensions/>
+            <header-extensions>h</header-extensions>
+            <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>src</sourceRootElem>
@@ -17,7 +18,6 @@
                     <type>0</type>
                 </confElem>
             </confList>
-            <sourceEncoding>UTF-8</sourceEncoding>
         </data>
     </configuration>
 </project>

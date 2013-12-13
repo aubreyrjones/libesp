@@ -2,6 +2,9 @@
 <configurationDescriptor version="84">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df name="src" root="src">
+      <in>Context.h</in>
+      <in>Event.h</in>
+      <in>profile.h</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -29,6 +32,12 @@
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath></executablePath>
+          <ccTool>
+            <standard>8</standard>
+            <preprocessorList>
+              <Elem>ESP_LINUX</Elem>
+            </preprocessorList>
+          </ccTool>
         </makeTool>
       </makefileType>
     </conf>
