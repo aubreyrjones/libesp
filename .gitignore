@@ -1,3 +1,4 @@
+*.o
 *.dblite
 *.pyc
 libesp.so
