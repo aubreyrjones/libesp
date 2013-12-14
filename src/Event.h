@@ -15,10 +15,10 @@ namespace esp
 {
 	enum EventType : uint32_t
 	{
-		PROBE_UINT = 1,
-		PROBE_FLOAT = 2,
-		PROBE_INT = 3,
-		ZONE_INTERVAL = 4
+		EV_PROBE_UINT = 1,
+		EV_PROBE_FLOAT = 2,
+		EV_PROBE_INT = 3,
+		EV_ZONE_INTERVAL = 4
 	};
 	
 	union ProfileEventValue
@@ -38,6 +38,11 @@ namespace esp
 		 * in this run of the target application.
 		 */
 		uint32_t id;
+				
+		/**
+		 * A reference to the enclosing event, if this is a stacked event.
+		 */
+		uint32_t parentEventRef;
 		
 		/**
 		 * This is the monotonically increasing sample frame number.
@@ -45,9 +50,10 @@ namespace esp
 		uint32_t frameNumber;
 
 		/**
-		 * This is the time of the event, in microseconds from the start of the frame.
+		 * This is the time of the event, in microseconds from the start of the 
+		 * current frame.
 		 */
-		uint32_t timestamp;
+		uint64_t timestamp;
 
 		/**
 		 * The type of the event.
@@ -63,11 +69,6 @@ namespace esp
 		 * A reference to the human identifier of this event.
 		 */
 		uint32_t eventNameRef;
-		
-		/**
-		 * A reference to the enclosing event, if this is a stacked event.
-		 */
-		uint32_t parentEventRef;
 	};
 	
 	

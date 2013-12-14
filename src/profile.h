@@ -35,6 +35,13 @@ extern "C"
 	 * each thread created.
 	 */
 	void esp_thread_init();
+	
+	/**
+	 * Call this once per "frame" (whatever that means in your context).
+	 * 
+	 * This call is necessary for just about everything.
+     */
+	void esp_frame_start();
 
 	/**
 	 * Starts a new profiling zone by pushing it onto the interval stack.

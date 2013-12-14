@@ -20,14 +20,6 @@ namespace esp
      * @return The current time in microseconds.
      */
 	uint64_t GetSystemTimestamp();
-	
-	/**
-	 * 
-	 */
-	class IntervalStack
-	{
-		
-	};
 }	
 
 #endif	/* TIMING_H */
