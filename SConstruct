@@ -24,7 +24,7 @@ elif esp_env['PLATFORM'] == 'darwin':
 
 if build_platform == 'posix':
     esp_env.AppendUnique(CPPDEFINES = ['ESP_LINUX'])
-    esp_env.AppendUnique(CCFLAGS = Split('-std=c++0x -fno-exceptions -fno-rtti'))
+    esp_env.AppendUnique(CCFLAGS = Split('-std=c++11 -pedantic -fPIC -fno-exceptions -fno-rtti'))
     esp_env.AppendUnique(LINKFLAGS = Split('-rdynamic -fno-exceptions -fno-rtti'))
 
 

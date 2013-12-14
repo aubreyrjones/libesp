@@ -8,6 +8,8 @@
 #ifndef CONTEXT_H
 #define	CONTEXT_H
 
+#include <stdint.h>
+
 #if (defined ESP_LINUX)
 #define ESP_TLS_DECL __thread
 #elif (defined ESP_WINDOWS)
