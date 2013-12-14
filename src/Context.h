@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+#include "Event.h"
+
 #if (defined ESP_LINUX)
 #define ESP_TLS_DECL __thread
 #elif (defined ESP_WINDOWS)
@@ -31,7 +33,7 @@ namespace esp
 		 * the threads call esp_thread_init().
 		 */
 		int32_t threadIndex;
-		
+		ProfileEventQueue pendingEvents;
 	};
 
 	/**

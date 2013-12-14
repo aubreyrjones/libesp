@@ -6,13 +6,13 @@
  */
 
 #include <stdint.h>
+#include "queue/readerwriterqueue.h"
 
 #ifndef EVENT_H
 #define	EVENT_H
 
 namespace esp
 {
-
 	enum EventType : uint32_t
 	{
 		PROBE_UINT = 1,
@@ -69,6 +69,10 @@ namespace esp
 		 */
 		uint32_t parentEventRef;
 	};
+	
+	
+	typedef moodycamel::ReaderWriterQueue<ProfileEvent> ProfileEventQueue;
+
 }
 #endif	/* EVENT_H */
 
