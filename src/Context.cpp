@@ -7,12 +7,15 @@ static ProfileContext* _context = nullptr;
 
 void ThreadContext::Zone(const char *zoneName)
 {
+	ProfileEvent *parentZone = profileIntervalStack.Peek();
 	ProfileEvent *ev = profileIntervalStack.Push();
 	ev->eventType = EV_ZONE_INTERVAL;
 	ev->timestamp = GetSystemTimestamp();
 	ev->frameNumber = frameNumber;
 	ev->eventNameRef = _context->MapStringToReference(zoneName);
-	
+	if (parentZone){
+		ev->parentEventRef = parentZone->id;
+	}
 }
 
 void ThreadContext::End()
