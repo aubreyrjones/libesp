@@ -39,11 +39,10 @@ extern "C"
 	void esp_thread_init();
 	
 	/**
-	 * Call this once per "frame" (whatever that means in your context).
-	 * 
-	 * This call is necessary for just about everything.
+	 * Call this once per "frame" (whatever that means in your context), at
+	 * the end of the frame.
      */
-	void esp_frame_start();
+	void esp_frame_end();
 
 	/**
 	 * Starts a new profiling zone by pushing it onto the interval stack.

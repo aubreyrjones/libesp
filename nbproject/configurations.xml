@@ -6,12 +6,19 @@
         <in>atomicops.h</in>
         <in>readerwriterqueue.h</in>
       </df>
+      <df name="stack">
+        <in>slabstack.h</in>
+      </df>
       <in>Context.cpp</in>
       <in>Context.h</in>
       <in>Event.h</in>
       <in>Timing.cpp</in>
       <in>Timing.h</in>
+      <in>profile.cpp</in>
       <in>profile.h</in>
+    </df>
+    <df name="tests" root="tests">
+      <in>1_initialization.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -23,6 +30,7 @@
   <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
   <sourceRootList>
     <Elem>src</Elem>
+    <Elem>tests</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -47,6 +55,16 @@
           </ccTool>
         </makeTool>
       </makefileType>
+      <folder path="tests">
+        <ccTool>
+          <incDir>
+            <pElem>src</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>ESP_LINUX</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
     </conf>
   </confs>
 </configurationDescriptor>

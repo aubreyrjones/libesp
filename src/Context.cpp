@@ -20,7 +20,7 @@ void ThreadContext::Zone(const char *zoneName)
 	if (!ev) {
 		return;
 	}
-	ev->id = _context->NextMessageID();
+	ev->id = _context->NextEventID();
 	ev->eventType = EV_ZONE_INTERVAL;
 	ev->timestamp = GetSystemTimestamp();
 	ev->frameNumber = _context->GetFrameNumber();
@@ -32,7 +32,13 @@ void ThreadContext::Zone(const char *zoneName)
 
 void ThreadContext::End()
 {
+	ProfileEvent *ev = profileIntervalStack.Pop();
+	if (!ev){
+		return;
+	}
 	
+	uint64_t curtime = GetSystemTimestamp();
+	ev->value.ui = curtime - ev->timestamp;
 }
 
 void ThreadContext::Sample(const char *probeName, const int32_t& value)
@@ -55,19 +61,27 @@ void ThreadContext::Sample(const char *probeName, const float& value)
 
 ProfileContext::ProfileContext() : 
 	threadCount(0), 
-	nextMessageID(0)
+	nextMessageID(0),
+	frameNumber(0)
 {
 	
 }
 
-
-ThreadContext* ProfileContext::NewThreadContext()
+void ProfileContext::InitThread()
 {
-	ThreadContext *newContext = new ThreadContext(threadCount.fetch_add(1));
+	if (!_thread_context){
+		_thread_context = new ThreadContext(threadCount.fetch_add(1));
+	}
+	
+}
+
+void ProfileContext::FrameEnd()
+{
+	++frameNumber;
 }
 
 
-uint32_t ProfileContext::NextMessageID()
+uint32_t ProfileContext::NextEventID()
 {
 	return nextMessageID.fetch_add(1);
 }

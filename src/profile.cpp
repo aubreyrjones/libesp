@@ -7,10 +7,17 @@ void esp_init()
 	esp_thread_init();
 }
 
+void esp_shutdown()
+{
+	//I don't know what this does yet.
+}
 
 void esp_thread_init()
 {
-	if (!esp::_thread_context){
-		esp::_thread_context = esp::_context->NewThreadContext();
-	}
+	esp::_context->InitThread();
+}
+
+void esp_frame_end()
+{
+	esp::_context->FrameEnd();
 }
