@@ -28,7 +28,7 @@ namespace devious
          */
 		SlabStack(int maxSize) : slab(nullptr), capacity(maxSize), topIndex(0)
 		{
-			slab = malloc(capacity * sizeof(T));
+			slab = (T*) malloc(capacity * sizeof(T));
 		}
 		
 		virtual ~SlabStack()

@@ -9,6 +9,7 @@
 #define	CONTEXT_H
 
 #include <stdint.h>
+#include <atomic>
 
 #include "Event.h"
 #include "stack/slabstack.h"
@@ -46,9 +47,9 @@ namespace esp
 		 */
 		ProfileEventStack profileIntervalStack;
 		
-		uint32_t frameNumber;
-		
 	public:
+		
+		ThreadContext(int32_t threadIndex);
 		
 		void Zone(const char *zoneName);
 		void End();
@@ -68,11 +69,25 @@ namespace esp
 		/**
 		 * How many different threads have called esp_thread_init()?
 		 */
-		int threadCount;
+		std::atomic_uint_fast32_t threadCount;
+		
+		std::atomic_uint_fast32_t nextMessageID;
 	
+		uint32_t frameNumber;
+		
 	public:
 		
+		ProfileContext();
+		
+		ThreadContext *NewThreadContext();
+		
 		uint32_t MapStringToReference(const char* string);
+		uint32_t NextMessageID();
+		
+		uint32_t GetFrameNumber() const
+		{
+			return frameNumber;
+		}
 	};
 	
 	

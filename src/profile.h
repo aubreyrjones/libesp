@@ -14,6 +14,8 @@ extern "C"
 {
 	/**
 	 * Initialize the overall ESP context.
+	 * 
+	 * This also initializes the main thread's context.
 	 * @return 
 	 */
 	void esp_init();
@@ -67,9 +69,9 @@ extern "C"
 	 * probes, so use a string literal or other consolidated string.
 	 * @param value The value of the probe to 
 	 */
-	void esp_sample(const char *probeName, const int32_t& value);
-	void esp_sample(const char *probeName, const uint32_t& value);
-	void esp_sample(const char *probeName, const float& value);
+	void esp_sample_int(const char *probeName, const int32_t& value);
+	void esp_sample_uint(const char *probeName, const uint32_t& value);
+	void esp_sample_float(const char *probeName, const float& value);
 }
 
 #endif	/* PROFILE_H */
