@@ -10,9 +10,13 @@
 
 #include <stdint.h>
 #include <atomic>
+#include <condition_variable>
+#include <mutex>
 
 #include "Event.h"
 #include "stack/slabstack.h"
+#include "Comms.h"
+#include "ESPConfig.h"
 
 #if (defined ESP_LINUX)
 #define ESP_TLS_DECL __thread
@@ -71,11 +75,31 @@ namespace esp
 		 */
 		std::atomic_uint_fast32_t threadCount;
 		
+		/**
+		 * The next sequential message id.
+		 */
 		std::atomic_uint_fast32_t nextMessageID;
 	
+		/**
+		 * The current frame number.
+		 */
 		std::atomic_uint_fast32_t frameNumber;
 		
+		/**
+		 * The timestamp of the current frame.
+		 */
 		std::atomic_uint_fast64_t frameTimestamp;
+		
+		EventStreamConsumer *eventConsumer;
+		
+		ThreadContext *threadContexts[espMaxThreadCount];
+		
+		std::mutex eventMutex;
+		std::condition_variable eventCondition;
+		
+		bool runDrainThread;
+		void DrainEvents();
+
 		
 	public:
 		
@@ -122,6 +146,11 @@ namespace esp
 		{
 			return frameNumber;
 		}
+		
+		/**
+		 * Indicates that an event is ready to be processed.
+         */
+		void NotifyEvent();
 	};
 	
 	

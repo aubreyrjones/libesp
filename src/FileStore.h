@@ -11,10 +11,11 @@
 #include "sqlite3/sqlite3.h"
 #include "Event.h"
 #include <string.h>
+#include "Comms.h"
 
 namespace esp
 {
-	class SessionFileStore
+	class SessionFileStore : public EventStreamConsumer
 	{
 	private:
 		sqlite3 *db;

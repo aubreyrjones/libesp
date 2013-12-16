@@ -1,3 +1,6 @@
+//NOTE! This file has been modified from the original. In particular, exceptions
+//have been removed.
+
 // ©2013 Cameron Desrochers.
 // Distributed under the simplified BSD license (see the license file that
 // should have come with this header).
@@ -344,9 +347,6 @@ private:
 			: inSection(_inSection)
 		{
 			assert(!inSection);
-			if (inSection) {
-				throw std::runtime_error("ReaderWriterQueue does not support enqueuing or dequeuing elements from other elements' ctors and dtors");
-			}
 
 			inSection = true;
 		}

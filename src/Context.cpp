@@ -7,8 +7,8 @@ ProfileContext* esp::_context = nullptr;
 
 ThreadContext::ThreadContext(int32_t threadIndex) :
 	threadIndex(threadIndex),
-	pendingEvents(1024),
-	profileIntervalStack(1024)
+	pendingEvents(espMaxEventBuffer),
+	profileIntervalStack(espMaxZoneRecursion)
 {
 	
 }
@@ -37,8 +37,10 @@ void ThreadContext::End()
 		return;
 	}
 	
-	uint64_t curtime = esp::_current_timestamp;
+	int64_t curtime = esp::_current_timestamp;
 	ev->value.ui = curtime - ev->timestamp;
+	
+	pendingEvents.enqueue(*ev);
 }
 
 void ThreadContext::Sample(const char *probeName, const int32_t& value)
@@ -62,7 +64,10 @@ void ThreadContext::Sample(const char *probeName, const float& value)
 ProfileContext::ProfileContext() : 
 	threadCount(0), 
 	nextMessageID(0),
-	frameNumber(0)
+	frameNumber(0),
+	runDrainThread(true),
+	eventMutex(),
+	eventCondition()
 {
 	
 }
@@ -70,7 +75,8 @@ ProfileContext::ProfileContext() :
 void ProfileContext::InitThread()
 {
 	if (!_thread_context){
-		_thread_context = new ThreadContext(threadCount.fetch_add(1));
+		int threadIndex = threadCount.fetch_add(1);
+		_thread_context = threadContexts[threadIndex] = new ThreadContext(threadIndex);
 	}
 	
 }
@@ -78,6 +84,7 @@ void ProfileContext::InitThread()
 void ProfileContext::FrameEnd()
 {
 	++frameNumber;
+	frameTimestamp = _current_timestamp;
 }
 
 
@@ -89,4 +96,24 @@ uint32_t ProfileContext::MapStringToReference(const char* string)
 uint32_t ProfileContext::NextEventID()
 {
 	return nextMessageID.fetch_add(1);
+}
+
+void ProfileContext::NotifyEvent()
+{
+	std::lock_guard<std::mutex> eventLock(eventMutex);
+	eventCondition.notify_one();
+}
+
+void ProfileContext::DrainEvents()
+{
+	while (runDrainThread) {
+		for (int i = 0; i < threadCount; i++) {
+			ProfileEvent ev;
+			while (threadContexts[i]->pendingEvents.try_dequeue(ev)) {
+				eventConsumer->WriteEvent(ev);
+			}
+		}
+		std::unique_lock<std::mutex> eventLock(eventMutex);
+		eventCondition.wait(eventLock);
+	}
 }
