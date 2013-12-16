@@ -11,15 +11,9 @@ uint64_t esp::_current_timestamp = 0;
 static pthread_t _timestamp_update_thread;
 static bool _run_thread = true;
 
-uint64_t GetSystemTimestamp()
+uint64_t TimespecToLinearMicroseconds(const struct timespec& spec)
 {
-	struct timespec time;
-	clock_gettime(CLOCK_MONOTONIC, &time);
-
-	uint64_t linearTime = time.tv_sec * 1000000; //seconds to microseconds
-	linearTime += time.tv_nsec / 1000; //nanoseconds to microseconds
-
-	return linearTime;
+	return spec.tv_sec * 1000000 + (spec.tv_nsec / 1000);
 }
 
 void AddMicroseconds(struct timespec *spec, int nMicroseconds)
@@ -35,15 +29,20 @@ void AddMicroseconds(struct timespec *spec, int nMicroseconds)
 
 void* update_timestamp_thread(void *)
 {
+
+	struct timespec lastTimeSpec;
+	struct timespec targetTimeSpec;
+	
+	clock_gettime(CLOCK_MONOTONIC, &lastTimeSpec);
+	
+	uint64_t startTime = TimespecToLinearMicroseconds(lastTimeSpec);
+	
 	while (_run_thread)
 	{
-		struct timespec lastTimeSpec;
-		struct timespec targetTimeSpec;
-		
 		clock_gettime(CLOCK_MONOTONIC, &lastTimeSpec);
 		
 		//current time in microseconds
-		_current_timestamp = lastTimeSpec.tv_sec * 1000000 + (lastTimeSpec.tv_nsec / 1000);
+		_current_timestamp = TimespecToLinearMicroseconds(lastTimeSpec) - startTime;
 	
 		targetTimeSpec = lastTimeSpec;
 		AddMicroseconds(&targetTimeSpec, 2); //2 microsecond resolution.
@@ -52,7 +51,7 @@ void* update_timestamp_thread(void *)
 	}
 }
 
-bool StartTimestampUpdate()
+bool esp::StartTimestampUpdate()
 {
 	int status;
 	
@@ -63,6 +62,11 @@ bool StartTimestampUpdate()
 	}
 	
 	return true;
+}
+
+void esp::StopTimestampUpdate()
+{
+	_run_thread = false;
 }
 
 #endif

@@ -2,8 +2,8 @@
 #include "Timing.h"
 using namespace esp;
 
-static ESP_TLS_DECL ThreadContext* _thread_context = nullptr;
-static ProfileContext* _context = nullptr;
+ESP_TLS_DECL ThreadContext* esp::_thread_context = nullptr;
+ProfileContext* esp::_context = nullptr;
 
 ThreadContext::ThreadContext(int32_t threadIndex) :
 	threadIndex(threadIndex),
@@ -80,6 +80,11 @@ void ProfileContext::FrameEnd()
 	++frameNumber;
 }
 
+
+uint32_t ProfileContext::MapStringToReference(const char* string)
+{
+	return 0;
+}
 
 uint32_t ProfileContext::NextEventID()
 {

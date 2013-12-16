@@ -6,6 +6,8 @@
         <in>atomicops.h</in>
         <in>readerwriterqueue.h</in>
       </df>
+      <df name="sqlite3">
+      </df>
       <df name="stack">
         <in>slabstack.h</in>
       </df>
@@ -18,7 +20,7 @@
       <in>profile.h</in>
     </df>
     <df name="tests" root="tests">
-      <in>1_initialization.cpp</in>
+      <in>1_init_zone.cpp</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -1,4 +1,6 @@
+*.a
 *.o
 *.dblite
 *.pyc
+tests/test*
 libesp.so

@@ -12,8 +12,10 @@ esp_env.AddMethod(filtered_glob, "FilteredGlob")
 build_platform = None
 build_64 = (ARGUMENTS.get('build_64', 'false') == 'true')
 build_debug = (ARGUMENTS.get('debug', 'false') == 'true')
+build_tests = (ARGUMENTS.get('tests', 'false') == 'true')
 
 if esp_env['PLATFORM'] == 'posix':
+    esp_env.Replace(CXX = "g++-4.8")
     build_platform = 'posix'
 elif esp_env['PLATFORM'] == 'win32':
     build_platform = 'win'
@@ -22,14 +24,34 @@ elif esp_env['PLATFORM'] == 'darwin':
     build_64 = True
     build_platform = 'mac'
 
+esp_libs = []
+
 if build_platform == 'posix':
     esp_env.AppendUnique(CPPDEFINES = ['ESP_LINUX'])
-    esp_env.AppendUnique(CCFLAGS = Split('-std=c++11 -pedantic -fPIC -fno-exceptions -fno-rtti'))
+    esp_env.AppendUnique(CCFLAGS = Split('-fPIC'))
+    esp_env.AppendUnique(CXXFLAGS = Split('-std=c++11 -pedantic -fno-exceptions -fno-rtti'))
     esp_env.AppendUnique(LINKFLAGS = Split('-rdynamic -fno-exceptions -fno-rtti'))
-
+    esp_libs = ['rt', 'pthread']
 
 esp_sources = esp_env.Glob("#/src/*.cpp")
 esp_objects = esp_env.Object(esp_sources)
 
-esp_shlib = esp_env.SharedLibrary("esp", esp_objects)
+sqlite_sources = esp_env.Glob("#/src/sqlite3/*.c")
+sqlite_objects = esp_env.Object(sqlite_sources)
+
+esp_lib = esp_env.Library("esp", esp_objects + sqlite_objects, LIBS=esp_libs)
+
+if build_tests:
+    # Build tests!
+    test_libs = esp_libs
+    test_env = esp_env.Clone()
+    
+    Export(['test_env', 'test_libs', 'esp_lib'])
+    test_scripts = esp_env.Glob("#tests/*.scons")
+    for s in test_scripts:
+        rval = SConscript(s)
+        Depends(rval, esp_lib)
+
+
+
 

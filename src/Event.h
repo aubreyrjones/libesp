@@ -51,7 +51,7 @@ namespace esp
 
 		/**
 		 * This is the time of the event, in microseconds from the start of the 
-		 * current frame.
+		 * application profile.
 		 */
 		uint64_t timestamp;
 
