@@ -1,3 +1,4 @@
+import os.path
 esp_env = Environment(tools=['default','textfile'], CPPPATH=['#/src'])
 esp_env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=1
 
@@ -16,6 +17,7 @@ build_tests = (ARGUMENTS.get('tests', 'false') == 'true')
 
 if esp_env['PLATFORM'] == 'posix':
     esp_env.Replace(CXX = "g++-4.8")
+    esp_env.Replace(CC = "gcc-4.8")
     build_platform = 'posix'
 elif esp_env['PLATFORM'] == 'win32':
     build_platform = 'win'
@@ -36,10 +38,13 @@ if build_platform == 'posix':
 esp_sources = esp_env.Glob("#/src/*.cpp")
 esp_objects = esp_env.Object(esp_sources)
 
-sqlite_sources = esp_env.Glob("#/src/sqlite3/*.c")
+sqlite_sources = esp_env.FilteredGlob("#/src/sqlite3/*.c", ["shell.c"])
 sqlite_objects = esp_env.Object(sqlite_sources)
 
+sqlite_shell_object = esp_env.Object(["#/src/sqlite3/shell.c"])
+
 esp_lib = esp_env.Library("esp", esp_objects + sqlite_objects, LIBS=esp_libs)
+sqlite_shell = esp_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=['pthread', 'dl'])
 
 if build_tests:
     # Build tests!
