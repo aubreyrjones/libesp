@@ -1,7 +1,7 @@
 #include "Timing.h"
 using namespace esp;
 
-uint64_t esp::_current_timestamp = 0;
+int64_t esp::_current_timestamp = 0;
 
 #if (defined ESP_LINUX)
 
@@ -11,7 +11,7 @@ uint64_t esp::_current_timestamp = 0;
 static pthread_t _timestamp_update_thread;
 static bool _run_thread = true;
 
-uint64_t TimespecToLinearMicroseconds(const struct timespec& spec)
+int64_t TimespecToLinearMicroseconds(const struct timespec& spec)
 {
 	return spec.tv_sec * 1000000 + (spec.tv_nsec / 1000);
 }
@@ -35,7 +35,7 @@ void* update_timestamp_thread(void *)
 	
 	clock_gettime(CLOCK_MONOTONIC, &lastTimeSpec);
 	
-	uint64_t startTime = TimespecToLinearMicroseconds(lastTimeSpec);
+	int64_t startTime = TimespecToLinearMicroseconds(lastTimeSpec);
 	
 	while (_run_thread)
 	{

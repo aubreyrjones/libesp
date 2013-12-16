@@ -21,7 +21,7 @@ namespace esp
 
 	void StopTimestampUpdate();
 	
-	extern uint64_t _current_timestamp;
+	extern int64_t _current_timestamp;
 }	
 
 #endif	/* TIMING_H */

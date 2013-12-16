@@ -47,7 +47,6 @@ esp_lib = esp_env.Library("esp", esp_objects + sqlite_objects, LIBS=esp_libs)
 sqlite_shell = esp_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=['pthread', 'dl'])
 
 if build_tests:
-    # Build tests!
     test_libs = esp_libs
     test_env = esp_env.Clone()
     

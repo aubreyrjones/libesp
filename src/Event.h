@@ -53,7 +53,7 @@ namespace esp
 		 * This is the time of the event, in microseconds from the start of the 
 		 * application profile.
 		 */
-		uint64_t timestamp;
+		int64_t timestamp;
 
 		/**
 		 * The type of the event.
