@@ -76,6 +76,7 @@ namespace esp
 		std::atomic_uint_fast32_t frameNumber;
 		
 		std::atomic_uint_fast64_t frameTimestamp;
+		
 	public:
 		
 		/**

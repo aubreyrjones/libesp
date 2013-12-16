@@ -8,18 +8,20 @@
 
 #include <stdint.h>
 
+#if (defined ESP_LINUX)
+#include <pthread.h>
+#endif
 
 #ifndef TIMING_H
 #define	TIMING_H
 
 namespace esp
 {
-	/**
-	 * Returns the highest-resolution current time possible.
-	 * 
-     * @return The current time in microseconds.
-     */
-	uint64_t GetSystemTimestamp();
+	bool StartTimestampUpdate();
+
+	void StopTimestampUpdate();
+	
+	extern uint64_t _current_timestamp;
 }	
 
 #endif	/* TIMING_H */

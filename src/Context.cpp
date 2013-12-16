@@ -22,7 +22,7 @@ void ThreadContext::Zone(const char *zoneName)
 	}
 	ev->id = _context->NextEventID();
 	ev->eventType = EV_ZONE_INTERVAL;
-	ev->timestamp = GetSystemTimestamp();
+	ev->timestamp = esp::_current_timestamp;
 	ev->frameNumber = _context->GetFrameNumber();
 	ev->eventNameRef = _context->MapStringToReference(zoneName);
 	if (parentZone){
@@ -37,7 +37,7 @@ void ThreadContext::End()
 		return;
 	}
 	
-	uint64_t curtime = GetSystemTimestamp();
+	uint64_t curtime = esp::_current_timestamp;
 	ev->value.ui = curtime - ev->timestamp;
 }
 
