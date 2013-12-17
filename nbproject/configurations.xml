@@ -4,16 +4,25 @@
     <df name="src" root="src">
       <df name="queue">
         <in>atomicops.h</in>
+        <in>lockless_ring.h</in>
         <in>readerwriterqueue.h</in>
       </df>
       <df name="sqlite3">
+        <in>shell.c</in>
+        <in>sqlite3.c</in>
+        <in>sqlite3.h</in>
+        <in>sqlite3ext.h</in>
       </df>
       <df name="stack">
         <in>slabstack.h</in>
       </df>
+      <in>Comms.h</in>
       <in>Context.cpp</in>
       <in>Context.h</in>
+      <in>ESPConfig.h</in>
       <in>Event.h</in>
+      <in>FileStore.cpp</in>
+      <in>FileStore.h</in>
       <in>Timing.cpp</in>
       <in>Timing.h</in>
       <in>profile.cpp</in>
@@ -48,7 +57,7 @@
           <buildCommandWorkingDir>.</buildCommandWorkingDir>
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
-          <executablePath></executablePath>
+          <executablePath>tests/test1</executablePath>
           <ccTool>
             <standard>8</standard>
             <preprocessorList>

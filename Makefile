@@ -1,5 +1,5 @@
 all:
-	python scons_local/scons.py -j 4 tests=true
+	python scons_local/scons.py -j 4 tests=true debug=true
 
 notest:
 	python scons_local/scons.py -j 4 tests=false

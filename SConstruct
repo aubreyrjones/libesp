@@ -33,6 +33,10 @@ if build_platform == 'posix':
     esp_env.AppendUnique(CCFLAGS = Split('-fPIC'))
     esp_env.AppendUnique(CXXFLAGS = Split('-std=c++11 -pedantic -fno-exceptions -fno-rtti'))
     esp_env.AppendUnique(LINKFLAGS = Split('-fno-exceptions -fno-rtti'))
+    if build_debug:
+        esp_env.AppendUnique(CCFLAGS = Split('-g'))
+    else:
+        esp_env.AppendUnique(CCFLAGS = Split('-O3'))
     esp_libs = ['rt', 'pthread', 'dl']
 
 esp_sources = esp_env.Glob("#/src/*.cpp")

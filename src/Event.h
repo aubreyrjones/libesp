@@ -6,8 +6,8 @@
  */
 
 #include <stdint.h>
-#include "queue/readerwriterqueue.h"
-
+#include "ESPConfig.h"
+#include "queue/lockless_ring.h"
 #ifndef EVENT_H
 #define	EVENT_H
 
@@ -72,7 +72,7 @@ namespace esp
 	};
 	
 	
-	typedef moodycamel::ReaderWriterQueue<ProfileEvent> ProfileEventQueue;
+	typedef devious::LockessRingQueue<ProfileEvent, esp::espMaxEventBuffer> ProfileEventQueue;
 
 }
 #endif	/* EVENT_H */

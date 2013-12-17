@@ -10,7 +10,7 @@ ProfileContext* esp::_context = nullptr;
 
 ThreadContext::ThreadContext(int32_t threadIndex) :
 	threadIndex(threadIndex),
-	pendingEvents(espMaxEventBuffer),
+	pendingEvents(),
 	profileIntervalStack(espMaxZoneRecursion)
 {
 	
@@ -54,7 +54,7 @@ void ThreadContext::End()
 	int64_t curtime = esp::_current_timestamp;
 	ev->value.ui = curtime - ev->timestamp;
 	
-	pendingEvents.enqueue(*ev);
+	pendingEvents.TryEnqueue(*ev);
 }
 
 void ThreadContext::Sample(const char *probeName, const int32_t& value)
@@ -132,8 +132,8 @@ void ProfileContext::DrainEvents()
 		hadEventsLast = false;
 		for (int i = 0; i < threadCount; i++) {
 			ProfileEvent ev;
-			while (threadContexts[i]->pendingEvents.try_dequeue(ev)) {
-				hadEventsLast = false;
+			while (threadContexts[i]->pendingEvents.TryDequeue(&ev)) {
+				hadEventsLast = true;
 				eventConsumer->WriteEvent(ev);
 			}
 		}

@@ -45,7 +45,7 @@ void* update_timestamp_thread(void *)
 		_current_timestamp = TimespecToLinearMicroseconds(lastTimeSpec) - startTime;
 	
 		targetTimeSpec = lastTimeSpec;
-		AddMicroseconds(&targetTimeSpec, 2); //2 microsecond resolution.
+		AddMicroseconds(&targetTimeSpec, 1); //2 microsecond resolution.
 		
 		clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &targetTimeSpec, nullptr);
 	}

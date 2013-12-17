@@ -1,4 +1,5 @@
 #include "FileStore.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include "Event.h"
 #include "sqlite3/sqlite3.h"
