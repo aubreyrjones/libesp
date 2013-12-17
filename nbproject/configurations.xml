@@ -14,13 +14,16 @@
       <df name="stack">
         <in>slabstack.h</in>
       </df>
+      <df name="uplift">
+        <in>FileStore.cpp</in>
+        <in>FileStore.h</in>
+      </df>
       <in>Comms.h</in>
       <in>Context.cpp</in>
       <in>Context.h</in>
       <in>ESPConfig.h</in>
       <in>Event.h</in>
-      <in>FileStore.cpp</in>
-      <in>FileStore.h</in>
+      <in>EventStreamIO.h</in>
       <in>Timing.cpp</in>
       <in>Timing.h</in>
       <in>profile.cpp</in>

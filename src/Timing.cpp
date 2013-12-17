@@ -9,7 +9,7 @@ int64_t esp::_current_timestamp = 0;
 #include <stdio.h>
 
 static pthread_t _timestamp_update_thread;
-static bool _run_thread = true;
+static bool _run_timestamp_thread = true;
 
 int64_t TimespecToLinearMicroseconds(const struct timespec& spec)
 {
@@ -37,7 +37,7 @@ void* update_timestamp_thread(void *)
 	
 	int64_t startTime = TimespecToLinearMicroseconds(lastTimeSpec);
 	
-	while (_run_thread)
+	while (_run_timestamp_thread)
 	{
 		clock_gettime(CLOCK_MONOTONIC, &lastTimeSpec);
 		
@@ -66,7 +66,7 @@ bool esp::StartTimestampUpdate()
 
 void esp::StopTimestampUpdate()
 {
-	_run_thread = false;
+	_run_timestamp_thread = false;
 }
 
 #endif

@@ -1,6 +1,5 @@
 #include "Context.h"
 #include "Timing.h"
-#include "FileStore.h"
 #include <chrono>
 
 using namespace esp;
@@ -10,7 +9,6 @@ ProfileContext* esp::_context = nullptr;
 
 ThreadContext::ThreadContext(int32_t threadIndex) :
 	threadIndex(threadIndex),
-	pendingEvents(),
 	profileIntervalStack(espMaxZoneRecursion)
 {
 	
@@ -54,7 +52,7 @@ void ThreadContext::End()
 	int64_t curtime = esp::_current_timestamp;
 	ev->value.ui = curtime - ev->timestamp;
 	
-	if (!pendingEvents.TryEnqueue(*ev)){
+	if (!_context->eventQueue.TryEnqueue(*ev)){
 		printf("\n.over.\n");
 	}
 }
@@ -92,9 +90,7 @@ ProfileContext::ProfileContext() :
 		new (threadContexts + i) ThreadContext(i);
 	}
 	
-	SessionFileStore *sfs = new SessionFileStore("esp_session.sqlite");
-	sfs->Initialize();
-	eventConsumer = new EventStreamConsumer; //sfs;
+	eventConsumer = new EventStreamConsumer; //null event consumer
 	drainThread = new std::thread(drain_bounce, this);
 }
 
@@ -136,12 +132,10 @@ void ProfileContext::DrainEvents()
 	bool hadEventsLast = false;
 	while (runDrainThread || hadEventsLast) {
 		hadEventsLast = false;
-		for (int i = 0; i < threadCount; i++) {
-			ProfileEvent ev;
-			while (threadContexts[i].pendingEvents.TryDequeue(&ev)) {
-				hadEventsLast = true;
-				eventConsumer->WriteEvent(ev);
-			}
+		ProfileEvent ev;
+		while (eventQueue.TryDequeue(&ev)) {
+			hadEventsLast = true;
+			eventConsumer->WriteEvent(ev);
 		}
 		//std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}

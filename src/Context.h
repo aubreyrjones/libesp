@@ -42,11 +42,7 @@ namespace esp
 		 * the threads call esp_thread_init().
 		 */
 		int32_t threadIndex;
-		/**
-		 * Events that we want the main thread to stream to storage.
-		 */
-		ProfileEventQueue pendingEvents;
-		
+
 		/**
 		 * The stack of profile intervals.
 		 */
@@ -54,7 +50,7 @@ namespace esp
 		
 	public:
 		
-		ThreadContext() : 	threadIndex(threadIndex), pendingEvents(), profileIntervalStack(espMaxZoneRecursion) {};
+		ThreadContext() : 	threadIndex(threadIndex), profileIntervalStack(espMaxZoneRecursion) {};
 		ThreadContext(int32_t threadIndex);
 		
 		void Zone(const char *zoneName);
@@ -71,6 +67,7 @@ namespace esp
 	 */
 	class ProfileContext
 	{
+		friend class ThreadContext;
 	protected:
 		/**
 		 * How many different threads have called esp_thread_init()?
@@ -99,6 +96,7 @@ namespace esp
 		bool runDrainThread;
 		std::thread *drainThread;
 		
+		ProfileEventQueue eventQueue;
 	public:
 		
 		/**

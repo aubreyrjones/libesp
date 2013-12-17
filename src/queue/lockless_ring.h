@@ -83,6 +83,24 @@ namespace devious {
 			*out = buffer[modcap(b)];
 			back.store(b + 1, std::memory_order_release);
 		}
+		
+		int TryDequeue(T* out, int maxOut)
+		{
+			int f = modcap(front);
+			int b = modcap(back.load(std::memory_order_acquire));
+			
+			if (f == b){ //empty
+				return 0;
+			}
+			
+			int top = (f < b) ? capacity : f;
+
+			int blockCopySize = top - b;
+			blockCopySize = (blockCopySize > maxOut) ? maxOut : blockCopySize;
+			memcpy(out, buffer + b, blockCopySize * sizeof (T));
+			back.fetch_add(blockCopySize, std::memory_order_release);
+			return blockCopySize;
+		}
 	};
 }
 #endif	/* LOCKLESS_RING_H */
