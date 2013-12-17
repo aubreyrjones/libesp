@@ -18,7 +18,7 @@ namespace esp
 		/**
 		 * Write a string into the database.
 		 */
-		virtual bool WriteString(uint32_t stringID, const char* string) = 0;
+		virtual bool WriteString(uint32_t stringID, const char* string) {};
 				
 		/**
 		 * Write an event into the database.
@@ -26,7 +26,7 @@ namespace esp
          * @param event
          * @return 
          */
-		virtual bool WriteEvent(const ProfileEvent& event) = 0;
+		virtual bool WriteEvent(const ProfileEvent& event) {};
 	};
 }
 

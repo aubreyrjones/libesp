@@ -5,7 +5,7 @@ void SimpleFunction()
 {
 	for (int j = 0; j < 5; j++) {
 		esp_zone("inner");
-		for (int k = 0; k < 5; k++) {
+		for (int k = 0; k < 10; k++) {
 			printf("%i,", j * k);
 		}
 		esp_end();

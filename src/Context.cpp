@@ -54,7 +54,9 @@ void ThreadContext::End()
 	int64_t curtime = esp::_current_timestamp;
 	ev->value.ui = curtime - ev->timestamp;
 	
-	pendingEvents.TryEnqueue(*ev);
+	if (!pendingEvents.TryEnqueue(*ev)){
+		printf("\n.over.\n");
+	}
 }
 
 void ThreadContext::Sample(const char *probeName, const int32_t& value)
