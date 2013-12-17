@@ -12,6 +12,9 @@ void esp_init()
 void esp_shutdown()
 {
 	esp::StopTimestampUpdate();
+	esp::_context->JoinDrainThreadForShutdown();
+	delete esp::_context;
+	esp::_context = nullptr;
 }
 
 void esp_thread_init()

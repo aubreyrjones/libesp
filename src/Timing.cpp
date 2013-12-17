@@ -13,7 +13,7 @@ static bool _run_thread = true;
 
 int64_t TimespecToLinearMicroseconds(const struct timespec& spec)
 {
-	return spec.tv_sec * 1000000 + (spec.tv_nsec / 1000);
+	return (spec.tv_sec * 1000000) + (spec.tv_nsec / 1000);
 }
 
 void AddMicroseconds(struct timespec *spec, int nMicroseconds)

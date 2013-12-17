@@ -20,10 +20,10 @@ static const char* CREATE_STRING_TABLE_QUERY =
 	"value TEXT );";
 
 static const char* INSERT_EVENT_QUERY = 
-	"insert into session_events (?, ?, ?, ?, ?, ?, ?);";
+	"INSERT INTO session_events VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 static const char* INSERT_STRING_QUERY = 
-	"insert into session_strings (?, ?);";
+	"INSERT INTO session_strings VALUES (?, ?);";
 
 SessionFileStore::SessionFileStore(const char* databaseFilename) : db(nullptr)
 {

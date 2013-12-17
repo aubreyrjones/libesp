@@ -1,8 +1,8 @@
 #include "Context.h"
 #include "Timing.h"
 #include "FileStore.h"
-#include <thread>
 #include <chrono>
+
 using namespace esp;
 
 ESP_TLS_DECL ThreadContext* esp::_thread_context = nullptr;
@@ -18,6 +18,10 @@ ThreadContext::ThreadContext(int32_t threadIndex) :
 
 void ThreadContext::Zone(const char *zoneName)
 {
+	if (!_context){
+		return;
+	}
+	
 	ProfileEvent *parentZone = profileIntervalStack.Peek();
 	ProfileEvent *ev = profileIntervalStack.Push();
 	if (!ev) {
@@ -31,10 +35,17 @@ void ThreadContext::Zone(const char *zoneName)
 	if (parentZone){
 		ev->parentEventRef = parentZone->id;
 	}
+	else {
+		ev->parentEventRef = 0;
+	}
 }
 
 void ThreadContext::End()
 {
+	if (!_context){
+		return;
+	}
+	
 	ProfileEvent *ev = profileIntervalStack.Pop();
 	if (!ev){
 		return;
@@ -64,13 +75,28 @@ void ThreadContext::Sample(const char *probeName, const float& value)
 
 //==================ProfileContext===================
 
+void drain_bounce(ProfileContext *pc)
+{
+	pc->DrainEvents();
+}
+
 ProfileContext::ProfileContext() : 
 	threadCount(0), 
 	nextMessageID(0),
 	frameNumber(0),
 	runDrainThread(true)
 {
-	eventConsumer = new SessionFileStore("test_session.sqlite");
+	SessionFileStore *sfs = new SessionFileStore("esp_session.sqlite");
+	sfs->Initialize();
+	eventConsumer = sfs;
+	drainThread = new std::thread(drain_bounce, this);
+}
+
+ProfileContext::~ProfileContext()
+{
+	if (eventConsumer){
+		delete eventConsumer;
+	}
 }
 
 void ProfileContext::InitThread()
@@ -101,13 +127,24 @@ uint32_t ProfileContext::NextEventID()
 
 void ProfileContext::DrainEvents()
 {
-	while (runDrainThread) {
+	bool hadEventsLast = false;
+	while (runDrainThread || hadEventsLast) {
+		hadEventsLast = false;
 		for (int i = 0; i < threadCount; i++) {
 			ProfileEvent ev;
 			while (threadContexts[i]->pendingEvents.try_dequeue(ev)) {
+				hadEventsLast = false;
 				eventConsumer->WriteEvent(ev);
 			}
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
+}
+
+void ProfileContext::JoinDrainThreadForShutdown()
+{
+	if (drainThread){
+		runDrainThread = false;
+		drainThread->join();
 	}
 }

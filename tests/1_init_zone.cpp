@@ -3,8 +3,8 @@
 
 void SimpleFunction()
 {
-	for (int j = 0; j < 100; j++) {
-		for (int k = 0; k < 100; k++) {
+	for (int j = 0; j < 10; j++) {
+		for (int k = 0; k < 10; k++) {
 			printf("%i,", j * k);
 		}
 	}

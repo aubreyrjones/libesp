@@ -9,6 +9,7 @@
 #define	CONTEXT_H
 
 #include <stdint.h>
+#include <thread>
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -95,8 +96,7 @@ namespace esp
 		ThreadContext *threadContexts[espMaxThreadCount];
 		
 		bool runDrainThread;
-		void DrainEvents();
-
+		std::thread *drainThread;
 		
 	public:
 		
@@ -106,6 +106,8 @@ namespace esp
 		 * This should not be called directly, in most circumstances.
          */
 		ProfileContext();
+		
+		virtual ~ProfileContext();
 		
 		/**
 		 * This should be called once per thread to initialize its ThreadContext.
@@ -145,9 +147,15 @@ namespace esp
 		}
 		
 		/**
-		 * Indicates that an event is ready to be processed.
+		 * Called by the thread function to drain events to the consumer.
          */
-		void NotifyEvent();
+		void DrainEvents();
+		
+		/**
+		 * Have the main thread join the drain thread so that all events
+		 * can be written to disk before exiting.
+         */
+		void JoinDrainThreadForShutdown();
 	};
 	
 	

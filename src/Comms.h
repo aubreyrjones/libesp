@@ -13,6 +13,8 @@ namespace esp
 	class EventStreamConsumer
 	{
 	public:
+		virtual ~EventStreamConsumer() {};
+		
 		/**
 		 * Write a string into the database.
 		 */
