@@ -1,3 +1,4 @@
+*.sqlite
 *.a
 *.o
 *.dblite

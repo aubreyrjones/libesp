@@ -94,9 +94,6 @@ namespace esp
 		
 		ThreadContext *threadContexts[espMaxThreadCount];
 		
-		std::mutex eventMutex;
-		std::condition_variable eventCondition;
-		
 		bool runDrainThread;
 		void DrainEvents();
 

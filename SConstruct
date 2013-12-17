@@ -32,8 +32,8 @@ if build_platform == 'posix':
     esp_env.AppendUnique(CPPDEFINES = ['ESP_LINUX'])
     esp_env.AppendUnique(CCFLAGS = Split('-fPIC'))
     esp_env.AppendUnique(CXXFLAGS = Split('-std=c++11 -pedantic -fno-exceptions -fno-rtti'))
-    esp_env.AppendUnique(LINKFLAGS = Split('-rdynamic -fno-exceptions -fno-rtti'))
-    esp_libs = ['rt', 'pthread']
+    esp_env.AppendUnique(LINKFLAGS = Split('-fno-exceptions -fno-rtti'))
+    esp_libs = ['rt', 'pthread', 'dl']
 
 esp_sources = esp_env.Glob("#/src/*.cpp")
 esp_objects = esp_env.Object(esp_sources)
@@ -44,7 +44,7 @@ sqlite_objects = esp_env.Object(sqlite_sources)
 sqlite_shell_object = esp_env.Object(["#/src/sqlite3/shell.c"])
 
 esp_lib = esp_env.Library("esp", esp_objects + sqlite_objects, LIBS=esp_libs)
-sqlite_shell = esp_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=['pthread', 'dl'])
+sqlite_shell = esp_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs)
 
 if build_tests:
     test_libs = esp_libs

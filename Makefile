@@ -5,7 +5,7 @@ notest:
 	python scons_local/scons.py -j 4 tests=false
 
 one:
-	python scons_local/scons.py 
+	python scons_local/scons.py tests=true
 
 clean:
 	python scons_local/scons.py -c tests=true

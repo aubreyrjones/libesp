@@ -1,5 +1,8 @@
 #include "Context.h"
 #include "Timing.h"
+#include "FileStore.h"
+#include <thread>
+#include <chrono>
 using namespace esp;
 
 ESP_TLS_DECL ThreadContext* esp::_thread_context = nullptr;
@@ -65,11 +68,9 @@ ProfileContext::ProfileContext() :
 	threadCount(0), 
 	nextMessageID(0),
 	frameNumber(0),
-	runDrainThread(true),
-	eventMutex(),
-	eventCondition()
+	runDrainThread(true)
 {
-	
+	eventConsumer = new SessionFileStore("test_session.sqlite");
 }
 
 void ProfileContext::InitThread()
@@ -98,12 +99,6 @@ uint32_t ProfileContext::NextEventID()
 	return nextMessageID.fetch_add(1);
 }
 
-void ProfileContext::NotifyEvent()
-{
-	std::lock_guard<std::mutex> eventLock(eventMutex);
-	eventCondition.notify_one();
-}
-
 void ProfileContext::DrainEvents()
 {
 	while (runDrainThread) {
@@ -113,7 +108,6 @@ void ProfileContext::DrainEvents()
 				eventConsumer->WriteEvent(ev);
 			}
 		}
-		std::unique_lock<std::mutex> eventLock(eventMutex);
-		eventCondition.wait(eventLock);
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }
