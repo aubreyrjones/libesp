@@ -86,6 +86,10 @@ ProfileContext::ProfileContext() :
 	frameNumber(0),
 	runDrainThread(true)
 {
+	for (int i = 0; i < espMaxThreadCount; i++){
+		new (threadContexts + i) ThreadContext(i);
+	}
+	
 	SessionFileStore *sfs = new SessionFileStore("esp_session.sqlite");
 	sfs->Initialize();
 	eventConsumer = sfs;
@@ -103,7 +107,7 @@ void ProfileContext::InitThread()
 {
 	if (!_thread_context){
 		int threadIndex = threadCount.fetch_add(1);
-		_thread_context = threadContexts[threadIndex] = new ThreadContext(threadIndex);
+		_thread_context = &threadContexts[threadIndex];
 	}
 	
 }
@@ -132,7 +136,7 @@ void ProfileContext::DrainEvents()
 		hadEventsLast = false;
 		for (int i = 0; i < threadCount; i++) {
 			ProfileEvent ev;
-			while (threadContexts[i]->pendingEvents.TryDequeue(&ev)) {
+			while (threadContexts[i].pendingEvents.TryDequeue(&ev)) {
 				hadEventsLast = true;
 				eventConsumer->WriteEvent(ev);
 			}

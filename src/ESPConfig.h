@@ -11,7 +11,7 @@
 namespace esp {
 
 	enum {
-		espMaxThreadCount = 1024,
+		espMaxThreadCount = 64,
 		espMaxEventBuffer = 1024,
 		espMaxZoneRecursion = 1024
 	};

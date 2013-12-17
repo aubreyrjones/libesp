@@ -3,12 +3,12 @@
 
 void SimpleFunction()
 {
-	for (int j = 0; j < 10; j++) {
-//		esp_zone("inner");
-		for (int k = 0; k < 10; k++) {
+	for (int j = 0; j < 5; j++) {
+		esp_zone("inner");
+		for (int k = 0; k < 5; k++) {
 			printf("%i,", j * k);
 		}
-//		esp_end();
+		esp_end();
 	}
 	printf(".\n");
 }

@@ -54,6 +54,7 @@ namespace esp
 		
 	public:
 		
+		ThreadContext() : 	threadIndex(threadIndex), pendingEvents(), profileIntervalStack(espMaxZoneRecursion) {};
 		ThreadContext(int32_t threadIndex);
 		
 		void Zone(const char *zoneName);
@@ -93,7 +94,7 @@ namespace esp
 		
 		EventStreamConsumer *eventConsumer;
 		
-		ThreadContext *threadContexts[espMaxThreadCount];
+		ThreadContext threadContexts[espMaxThreadCount];
 		
 		bool runDrainThread;
 		std::thread *drainThread;
