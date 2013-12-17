@@ -39,7 +39,7 @@ namespace devious {
          */
 		bool Empty() 
 		{
-			int f = front.load(std::memory_order_acquire);
+			int f = front;
 			int b = back.load(std::memory_order_acquire);
 			return modcap_eq(f, b);
 		}
@@ -50,7 +50,7 @@ namespace devious {
          */
 		bool Full() 
 		{
-			int f = front.load(std::memory_order_acquire);
+			int f = front;
 			int b = back.load(std::memory_order_acquire);
 			
 			return modcap_eq(f + 1, b);
@@ -61,7 +61,7 @@ namespace devious {
 			int f = front.load(std::memory_order_acquire);
 
 			do {
-				int b = back.load(std::memory_order_acquire);
+				int b = back;
 				if (modcap_eq(f + 1, b)){
 					return false; //full
 				}
@@ -73,7 +73,7 @@ namespace devious {
 		
 		bool TryDequeue(T* out)
 		{
-			int f = front.load(std::memory_order_acquire);
+			int f = front;
 			int b = back.load(std::memory_order_acquire);
 			
 			if (modcap_eq(f, b)){

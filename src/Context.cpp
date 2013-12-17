@@ -94,7 +94,7 @@ ProfileContext::ProfileContext() :
 	
 	SessionFileStore *sfs = new SessionFileStore("esp_session.sqlite");
 	sfs->Initialize();
-	eventConsumer = sfs;
+	eventConsumer = new EventStreamConsumer; //sfs;
 	drainThread = new std::thread(drain_bounce, this);
 }
 
