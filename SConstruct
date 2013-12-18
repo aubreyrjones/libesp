@@ -45,14 +45,17 @@ esp_objects = esp_env.Object(esp_sources)
 esp_lib = esp_env.Library("esp", esp_objects, LIBS=esp_libs)
 
 
-# these will be used for the esp_uplift
-#sqlite_sources = esp_env.FilteredGlob("#/src/sqlite3/*.c", ["shell.c"])
-#sqlite_objects = esp_env.Object(sqlite_sources)
-#
-#sqlite_shell_object = esp_env.Object(["#/src/sqlite3/shell.c"])
-#sqlite_shell = esp_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs)
 
-#esp_uplift = uplift_environ.Program()
+sqlite_sources = esp_env.FilteredGlob("#/src/sqlite3/*.c", ["shell.c"])
+sqlite_objects = esp_env.Object(sqlite_sources)
+
+sqlite_shell_object = esp_env.Object(["#/src/sqlite3/shell.c"])
+sqlite_shell = esp_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs)
+
+uplift_sources = esp_env.Glob("#/src/uplift/*.cpp")
+uplift_objects = esp_env.Object(uplift_sources)
+
+esp_uplift = esp_env.Program("esp_uplift", sqlite_objects + uplift_objects, LIBS=esp_libs)
 
 
 if build_tests:

@@ -39,10 +39,7 @@ void RawEventWriter::Drain()
 {
 	
 	writeBufferUsed += contextQueue->TryDequeue(writeBuffer + writeBufferUsed, espWriteBufferSize - writeBufferUsed);
-//	while (contextQueue->TryDequeue(writeBuffer + writeBufferUsed)){
-//		writeBufferUsed++;
-//	}
-	
+
 	if (writeBufferUsed >= espWriteBufferThresholdPrecompute){
 		Flush();
 	}

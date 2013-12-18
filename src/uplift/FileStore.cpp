@@ -126,3 +126,14 @@ bool SessionFileStore::WriteEvent(const ProfileEvent& event)
 	
 	return false;
 }
+
+		
+void SessionFileStore::StartBulkInsert()
+{
+	sqlite3_exec(db, "BEGIN TRANSACTION;", nullptr, nullptr, nullptr);
+}
+
+void SessionFileStore::EndBulkInsert()
+{
+	sqlite3_exec(db, "COMMIT TRANSACTION;", nullptr, nullptr, nullptr);
+}

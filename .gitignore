@@ -8,3 +8,4 @@
 tests/test*
 libesp.so
 sqlite
+esp_uplift

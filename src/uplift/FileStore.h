@@ -40,6 +40,9 @@ namespace esp
 		{
 			return filename;
 		}
+		
+		void StartBulkInsert();
+		void EndBulkInsert();
 				
 		/**
 		 * Write a string into the database.
