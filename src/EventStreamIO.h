@@ -24,11 +24,12 @@ namespace esp
 		int writeBufferUsed;
 		
 	protected:
-		virtual void Drain();
+		void Drain();
+		void Flush();
+		
 	public:
 		RawEventWriter(const char *path);
 		virtual ~RawEventWriter();
-		
 	};
 }
 

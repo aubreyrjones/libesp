@@ -104,6 +104,12 @@ namespace esp
 		virtual ~ProfileContext();
 		
 		/**
+		 * Start draining events.
+         * @param consumer
+         */
+		void StartDrain(EventStreamConsumer *consumer);
+		
+		/**
 		 * This should be called once per thread to initialize its ThreadContext.
 		 * 
 		 * This method has no effect if the thread has already been initialized,
@@ -145,6 +151,8 @@ namespace esp
 		 * can be written to disk before exiting.
          */
 		void JoinDrainThreadForShutdown();
+		
+		void PrintStatus();
 	};
 	
 	

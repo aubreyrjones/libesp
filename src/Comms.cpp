@@ -6,11 +6,16 @@ void EventStreamConsumer::DrainThreadBounce(EventStreamConsumer *consumer)
 	consumer->DrainLoop();
 }
 
+EventStreamConsumer::~EventStreamConsumer()
+{
+}
+
 void EventStreamConsumer::DrainLoop()
 {
-	while (runThread){
+	while (runThread || stillBusy){
 		Drain();
 	}
+	Flush();
 }
 
 void EventStreamConsumer::RegisterEventQueue(ProfileEventQueue *queue)
@@ -20,12 +25,18 @@ void EventStreamConsumer::RegisterEventQueue(ProfileEventQueue *queue)
 
 void EventStreamConsumer::StartDrainThread()
 {
-	if (!drainThread){
-		drainThread = new std::thread(DrainThreadBounce, this);
+	if (!runThread){
+		runThread = true;
+		drainThread = std::thread(DrainThreadBounce, this);
 	}
 }
 
-void EventStreamConsumer::StopDrainThread()
+void EventStreamConsumer::ShutdownAndWait()
 {
-	runThread = false;
+	if (runThread){
+		runThread = false;
+		if (drainThread.joinable()){
+			drainThread.join();
+		}
+	}
 }

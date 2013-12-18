@@ -120,4 +120,18 @@ uint32_t ProfileContext::NextEventID()
 
 void ProfileContext::JoinDrainThreadForShutdown()
 {
+	printf("Shutting down ESP.\n");
+	eventConsumer->ShutdownAndWait();
+}
+
+void ProfileContext::StartDrain(EventStreamConsumer *consumer)
+{
+	eventConsumer = consumer;
+	eventConsumer->RegisterEventQueue(&eventQueue);
+	eventConsumer->StartDrainThread();
+}
+
+void ProfileContext::PrintStatus()
+{
+	printf("Outstanding events: %d\n", eventQueue.GetSize());
 }

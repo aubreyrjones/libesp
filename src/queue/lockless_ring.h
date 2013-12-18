@@ -57,6 +57,11 @@ namespace devious {
 			return modcap_eq(f + 1, b);
 		}
 		
+		int GetSize()
+		{
+			return front - back;
+		}
+		
 		bool TryEnqueue(const T& value)
 		{
 			int f = front.load(std::memory_order_acquire);

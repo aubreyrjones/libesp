@@ -19,10 +19,10 @@ namespace esp {
 		
 		//The size of the in-memory event buffer, measured in events. If you're 
 		//dropping events, consider increasing this.
-		espMaxEventBuffer = 1024 * 512,
+		espMaxEventBuffer = 512 * 1024,
 		
 		//The size of the write block buffer, in number of events.
-		espWriteBufferSize = 16384,
+		espWriteBufferSize = 16 * 1024,
 		
 		//If the IO system has accumulated >= espWriteBufferSize - espWriteBufferThreshold,
 		//it will attempt a write to disk.

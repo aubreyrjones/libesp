@@ -4,6 +4,7 @@
 *.o
 *.dblite
 *.pyc
+*.esp
 tests/test*
 libesp.so
 sqlite

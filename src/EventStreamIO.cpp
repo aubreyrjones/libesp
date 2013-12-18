@@ -13,17 +13,39 @@ RawEventWriter::RawEventWriter(const char* path) :
 	}
 }
 
+RawEventWriter::~RawEventWriter()
+{
+	if (outputFile){
+		fflush(outputFile);
+		fclose(outputFile);
+	}
+}
+
+void RawEventWriter::Flush()
+{
+	int toWrite = writeBufferUsed;
+	int written = 0;
+	do {
+		int thisWrite = fwrite(writeBuffer + written, sizeof (ProfileEvent), toWrite, outputFile);
+		written += thisWrite;
+		toWrite -= thisWrite;
+	}
+	while (toWrite > 0);
+
+	writeBufferUsed = 0;	
+}
 
 void RawEventWriter::Drain()
 {
-	writeBufferUsed += contextQueue->TryDequeue(writeBuffer, espWriteBufferSize - writeBufferUsed);
+	
+	writeBufferUsed += contextQueue->TryDequeue(writeBuffer + writeBufferUsed, espWriteBufferSize - writeBufferUsed);
+//	while (contextQueue->TryDequeue(writeBuffer + writeBufferUsed)){
+//		writeBufferUsed++;
+//	}
+	
 	if (writeBufferUsed >= espWriteBufferThresholdPrecompute){
-		int toWrite = writeBufferUsed;
-		int written = 0;
-		do {
-			int thisWrite = fwrite(writeBuffer + written, sizeof(ProfileEvent), toWrite, outputFile);
-			written += thisWrite;
-			toWrite -= thisWrite;
-		} while(toWrite);
+		Flush();
 	}
+	
+	stillBusy = !contextQueue->Empty();
 }

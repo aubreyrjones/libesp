@@ -1,16 +1,19 @@
 #include "profile.h"
 #include "Context.h"
 #include "Timing.h"
+#include "EventStreamIO.h"
 
 void esp_init()
 {
 	esp::_context = new esp::ProfileContext;
 	esp_thread_init();
 	esp::StartTimestampUpdate();
+	esp::_context->StartDrain(new esp::RawEventWriter("session_stream.esp"));
 }
 
 void esp_shutdown()
 {
+	esp::_context->PrintStatus();
 	esp::StopTimestampUpdate();
 	esp::_context->JoinDrainThreadForShutdown();
 	delete esp::_context;
