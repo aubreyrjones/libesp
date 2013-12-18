@@ -75,23 +75,14 @@ void ThreadContext::Sample(const char *probeName, const float& value)
 
 //==================ProfileContext===================
 
-void drain_bounce(ProfileContext *pc)
-{
-	pc->DrainEvents();
-}
-
 ProfileContext::ProfileContext() : 
 	threadCount(0), 
 	nextMessageID(0),
-	frameNumber(0),
-	runDrainThread(true)
+	frameNumber(0)
 {
 	for (int i = 0; i < espMaxThreadCount; i++){
 		new (threadContexts + i) ThreadContext(i);
 	}
-	
-	eventConsumer = new EventStreamConsumer; //null event consumer
-	drainThread = new std::thread(drain_bounce, this);
 }
 
 ProfileContext::~ProfileContext()
@@ -124,27 +115,9 @@ uint32_t ProfileContext::MapStringToReference(const char* string)
 
 uint32_t ProfileContext::NextEventID()
 {
-	return nextMessageID.fetch_add(1);
-}
-
-void ProfileContext::DrainEvents()
-{
-	bool hadEventsLast = false;
-	while (runDrainThread || hadEventsLast) {
-		hadEventsLast = false;
-		ProfileEvent ev;
-		while (eventQueue.TryDequeue(&ev)) {
-			hadEventsLast = true;
-			eventConsumer->WriteEvent(ev);
-		}
-		//std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
+	return nextMessageID.fetch_add(1, std::memory_order_acq_rel);
 }
 
 void ProfileContext::JoinDrainThreadForShutdown()
 {
-	if (drainThread){
-		runDrainThread = false;
-		drainThread->join();
-	}
 }

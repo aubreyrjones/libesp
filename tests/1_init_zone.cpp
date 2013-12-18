@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 	esp_init();
 	
 	for (int i = 0; i < 1000; i++){	
-		esp_zone("test_zone");
+		esp_zone("outer");
 		SimpleFunction();
 		esp_end();
 		

@@ -31,8 +31,8 @@ esp_libs = []
 if build_platform == 'posix':
     esp_env.AppendUnique(CPPDEFINES = ['ESP_LINUX'])
     esp_env.AppendUnique(CCFLAGS = Split('-fPIC'))
-    esp_env.AppendUnique(CXXFLAGS = Split('-std=c++11 -pedantic -fno-rtti'))
-    esp_env.AppendUnique(LINKFLAGS = Split('-static -rdynamic -fno-rtti'))
+    esp_env.AppendUnique(CXXFLAGS = Split('-std=c++11 -pedantic -fno-rtti -fno-exceptions'))
+    esp_env.AppendUnique(LINKFLAGS = Split('-static -rdynamic -fno-rtti -fno-exceptions'))
     if build_debug:
         esp_env.AppendUnique(CCFLAGS = Split('-g'))
     else:

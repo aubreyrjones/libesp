@@ -11,8 +11,6 @@
 #include <stdint.h>
 #include <thread>
 #include <atomic>
-#include <condition_variable>
-#include <mutex>
 
 #include "Event.h"
 #include "stack/slabstack.h"
@@ -93,9 +91,6 @@ namespace esp
 		
 		ThreadContext threadContexts[espMaxThreadCount];
 		
-		bool runDrainThread;
-		std::thread *drainThread;
-		
 		ProfileEventQueue eventQueue;
 	public:
 		
@@ -144,11 +139,6 @@ namespace esp
 		{
 			return frameNumber;
 		}
-		
-		/**
-		 * Called by the thread function to drain events to the consumer.
-         */
-		void DrainEvents();
 		
 		/**
 		 * Have the main thread join the drain thread so that all events

@@ -5,6 +5,7 @@
  * Created on December 16, 2013, 10:02 PM
  */
 #include <atomic>
+#include <string.h>
 #ifndef LOCKLESS_RING_H
 #define	LOCKLESS_RING_H
 
