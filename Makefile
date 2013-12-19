@@ -9,6 +9,8 @@ one:
 
 clean:
 	python scons_local/scons.py -c tests=true
+	rm -f *.esp
+	rm -f *.sqlite
 
 release:
 	python scons_local/scons.py -j 4 mode=release tests=true
