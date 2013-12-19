@@ -80,7 +80,7 @@ namespace devious {
 		
 		bool TryDequeue(T* out)
 		{
-			int f = front;
+			int f = readfront.load(std::memory_order_acquire);
 			int b = back.load(std::memory_order_acquire);
 			
 			if (modcap_eq(f, b)){

@@ -67,9 +67,10 @@ SCons build system. This is a python script for building everything. Have a look
 in there and you can see how to directly invoke SCons.
 
 Additionally, you can just copy the source and header files from the github
-clone into your own build system. You might want to *not* add the "./src/uplift"
-directory if that's the case, though, since this is a command line utility and
-does not need to be embedded within your program.
+clone into your own build system. If you choose to go this route, I recommend
+you *not* include either "./src/uplift" or "./src/sqlite/shell.c". Those are
+both command-line tools that likely do not need to be embedded in your
+application.
 
 
 Building ESP on Windows
