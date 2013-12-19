@@ -59,14 +59,26 @@ namespace devious
 			do {
 				PT prevKey = nullptr;
 				
+				prevKey = table[idx].ptr.load(std::memory_order_relaxed);
+				
+				if (prevKey == ptr){ //already found it, and it already exists, so bail
+					return -1;
+				}
+				else if (prevKey != nullptr){ //already taken by some other pointer, so keep looking.
+					goto next_step;
+				}
+				
 				if (table[idx].ptr.compare_exchange_weak(prevKey, ptr, std::memory_order_release, std::memory_order_acquire)){ //successful claim
 					int index = nextIndex.fetch_add(1);
 					table[idx].value.store(index, std::memory_order_release);
 					return index;
 				}
-				else {
-					idx = (idx + 1) % capacity;
+				else { //something stole it from us, so keep looking.
+					goto next_step;
 				}
+				
+next_step:
+				idx = (idx + 1) % capacity;
 				
 			} while (searchStart != idx);
 			
