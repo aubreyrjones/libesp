@@ -53,7 +53,7 @@ void ThreadContext::End()
 	ev->data.value.ui = curtime - ev->data.timestamp;
 	
 	if (!_context->eventQueue.TryEnqueue(*ev)){
-		printf("\n.over.\n");
+		printf("\n.overflow.\n");
 	}
 }
 

@@ -113,7 +113,7 @@ namespace esp
 	struct SerializedStringHeader
 	{
 		ProfileEventHeader header;
-		int length;
+		uint32_t length;
 	};
 	
 	typedef devious::LockessRingQueue<ProfileEvent, esp::espMaxEventBuffer> ProfileEventQueue;
