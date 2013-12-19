@@ -1,0 +1,10 @@
+Import(['test_env', 'test_libs', 'esp_lib'])
+
+env = test_env.Clone()
+
+test_sources = ["2_threads_samples.cpp"]
+test_objects = env.Object(test_sources)
+
+test_program = env.Program("test2", test_objects + esp_lib, LIBS=test_libs)
+
+Return('test_program')

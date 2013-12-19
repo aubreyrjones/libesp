@@ -48,6 +48,9 @@ namespace esp
 		 */
 		ProfileEventStack profileIntervalStack;
 		
+		uint32_t PeekParentID();
+		ProfileEvent* StampEvent(ProfileEvent *ev, const char *nameString);
+		
 	public:
 		
 		ThreadContext() : 	threadIndex(threadIndex), profileIntervalStack(espMaxZoneRecursion) {};

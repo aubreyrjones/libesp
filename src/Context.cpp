@@ -14,28 +14,47 @@ ThreadContext::ThreadContext(int32_t threadIndex) :
 	
 }
 
+uint32_t ThreadContext::PeekParentID()
+{
+	ProfileEvent *parentZone = profileIntervalStack.Peek();
+	if (parentZone){
+		return parentZone->header.id;
+	}
+	else {
+		return 0;
+	}
+}
+
+ProfileEvent* ThreadContext::StampEvent(ProfileEvent *ev, const char *nameString)
+{
+	if (!ev){
+		return nullptr;
+	}
+	
+	ev->header.id = _context->NextEventID();
+	ev->data.threadID = threadIndex;
+	ev->data.timestamp = esp::_current_timestamp;
+	ev->data.frameNumber = _context->GetFrameNumber();
+	ev->data.eventNameRef = _context->MapStringToReference(nameString);
+	
+	return ev;
+}
+
+
 void ThreadContext::Zone(const char *zoneName)
 {
 	if (!_context){
 		return;
 	}
 	
-	ProfileEvent *parentZone = profileIntervalStack.Peek();
-	ProfileEvent *ev = profileIntervalStack.Push();
+	uint32_t parentRef = PeekParentID();
+	ProfileEvent *ev = StampEvent(profileIntervalStack.Push(), zoneName);
 	if (!ev) {
 		return;
 	}
-	ev->header.id = _context->NextEventID();
+	
 	ev->header.eventType = EV_ZONE_INTERVAL;
-	ev->data.timestamp = esp::_current_timestamp;
-	ev->data.frameNumber = _context->GetFrameNumber();
-	ev->data.eventNameRef = _context->MapStringToReference(zoneName);
-	if (parentZone){
-		ev->data.parentEventRef = parentZone->header.id;
-	}
-	else {
-		ev->data.parentEventRef = 0;
-	}
+	ev->data.parentEventRef = parentRef;
 }
 
 void ThreadContext::End()
@@ -49,27 +68,54 @@ void ThreadContext::End()
 		return;
 	}
 	
-	int64_t curtime = esp::_current_timestamp;
-	ev->data.value.ui = curtime - ev->data.timestamp;
+	ev->data.value.ui = esp::_current_timestamp - ev->data.timestamp;
 	
-	if (!_context->eventQueue.TryEnqueue(*ev)){
-		printf("\n.overflow.\n");
-	}
+	_context->eventQueue.TryEnqueue(*ev);
 }
 
 void ThreadContext::Sample(const char *probeName, const int32_t& value)
 {
+	if (!_context){
+		return;
+	}
 	
+	ProfileEvent pe;
+	StampEvent(&pe, probeName);
+	pe.header.eventType = EV_PROBE_INT;
+	pe.data.value.i = value;
+	pe.data.parentEventRef = PeekParentID();
+	
+	_context->eventQueue.TryEnqueue(pe);
 }
 
 void ThreadContext::Sample(const char *probeName, const uint32_t& value)
 {
+	if (!_context){
+		return;
+	}
 	
+	ProfileEvent pe;
+	StampEvent(&pe, probeName);
+	pe.header.eventType = EV_PROBE_UINT;
+	pe.data.value.ui = value;
+	pe.data.parentEventRef = PeekParentID();
+	
+	_context->eventQueue.TryEnqueue(pe);	
 }
 
 void ThreadContext::Sample(const char *probeName, const float& value)
 {
+	if (!_context){
+		return;
+	}
 	
+	ProfileEvent pe;
+	StampEvent(&pe, probeName);
+	pe.header.eventType = EV_PROBE_FLOAT;
+	pe.data.value.f = value;
+	pe.data.parentEventRef = PeekParentID();
+	
+	_context->eventQueue.TryEnqueue(pe);	
 }
 
 
@@ -77,7 +123,7 @@ void ThreadContext::Sample(const char *probeName, const float& value)
 
 ProfileContext::ProfileContext() : 
 	threadCount(0), 
-	nextMessageID(0),
+	nextMessageID(1),
 	frameNumber(0)
 {
 	for (int i = 0; i < espMaxThreadCount; i++){
