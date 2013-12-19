@@ -48,6 +48,8 @@ def add_linux_common_build_options(environ):
 if build_platform == 'posix':    
     add_linux_common_build_options(esp_env)
     uplift_env = esp_env.Clone()
+    uplift_env.AppendUnique(CPPDEFINES = ['HAVE_READLINE=1'])
+    
     esp_env.AppendUnique(CXXFLAGS = Split('-fno-exceptions'))
     esp_env.AppendUnique(LINKFLAGS = Split('-fno-exceptions'))
     
@@ -64,7 +66,7 @@ sqlite_sources = uplift_env.FilteredGlob("#/src/sqlite3/*.c", ["shell.c"])
 sqlite_objects = uplift_env.Object(sqlite_sources)
 
 sqlite_shell_object = uplift_env.Object(["#/src/sqlite3/shell.c"])
-sqlite_shell = uplift_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs)
+sqlite_shell = uplift_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs + ['readline'])
 
 uplift_sources = uplift_env.Glob("#/src/uplift/*.cpp")
 uplift_objects = uplift_env.Object(uplift_sources)

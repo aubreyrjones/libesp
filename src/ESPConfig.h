@@ -21,6 +21,9 @@ namespace esp {
 		//dropping events, consider increasing this.
 		espMaxEventBuffer = 512 * 1024,
 		
+		//Size of the string identity lookup table.
+		espStringTableSize = 1 << 14,
+		
 		//The size of the write block buffer, in number of events.
 		espWriteBufferSize = 16 * 1024,
 		

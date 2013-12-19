@@ -98,7 +98,7 @@ namespace esp
 		
 		ProfileEventQueue eventQueue;
 		
-		devious::PointerHash<const char *, 16384> strings;
+		devious::PointerHash<const char *, espStringTableSize> strings;
 	public:
 		
 		/**
