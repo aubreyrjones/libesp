@@ -68,9 +68,9 @@ in there and you can see how to directly invoke SCons.
 
 Additionally, you can just copy the source and header files from the github
 clone into your own build system. If you choose to go this route, I recommend
-you *not* include either "./src/uplift" or "./src/sqlite/shell.c". Those are
-both command-line tools that likely do not need to be embedded in your
-application.
+you *not* include either "./src/uplift" or "./src/sqlite". Those files are
+related to the esp_uplift utility that converts raw ESP event streams into
+sqlite3 databases.
 
 
 Building ESP on Windows
@@ -155,6 +155,8 @@ esp_frame_end() at the end of each iteration.
 Finally, before you exit the program, you should call esp_shutdown(). This will
 flush all pending events to disk and block until IO is complete.
 
+You can then run the esp_uplift tool on the .esp file created during application
+profiling. This will create a sqlite3 database of events from the raw stream.
 
 
 
