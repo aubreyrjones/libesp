@@ -16,7 +16,7 @@ namespace devious {
 	{
 	private:
 		T buffer[capacity + 1];
-		std::atomic_int back, front;
+		std::atomic_int back, front, readfront;
 		
 		inline int modcap(int i)
 		{
@@ -29,7 +29,7 @@ namespace devious {
 		}
 	public:
 
-		LockessRingQueue() : back(0), front(0) {
+		LockessRingQueue() : back(0), front(0), readfront(0) {
 		};
 
 		
@@ -74,6 +74,7 @@ namespace devious {
 			} while (!front.compare_exchange_weak(f, f + 1, std::memory_order_release, std::memory_order_acquire));
 			
 			buffer[modcap(f)] = value;
+			readfront.fetch_add(1, std::memory_order_acq_rel);
 			return true;
 		}
 		
@@ -92,7 +93,7 @@ namespace devious {
 		
 		int TryDequeue(T* out, int maxOut)
 		{
-			int f = modcap(front);
+			int f = modcap(readfront.load(std::memory_order_acquire));
 			int b = modcap(back.load(std::memory_order_acquire));
 			
 			if (f == b){ //empty

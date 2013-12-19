@@ -20,9 +20,7 @@ Requirements
 
 This code is designed and tested to run on multicore 64-bit x86 processors.
 I'm not saying it *can't* work well elsewhere, but it probably *doesn't* work
-anywhere else at the time of this writing. Why multicore? Because the timestamp
-thread is greedy. This can certainly be improved, but presently the timestamp
-thread will happily spin 100% of a core.
+anywhere else at the time of this writing.
 
 Also, you might need fast storage. I'm on SSD, and everything is near-instantaneous. I
 don't know what it's like on spinning platters. If it's a problem, you can
@@ -37,10 +35,14 @@ You can overload ESP with sheer event volume. Try to keep it to a couple
 thousand per frame, and try to keep the framerate below 120Hz.
 
 libesp is designed primarily for games, with low overhead on the profiled path.
-It often sacrifices data safety for speed.
+It often sacrifices data safety for speed. Don't use ESP in situations where the
+output profiling data is mission critical. Sure as hell don't use it for
+anything safety critical.
 
-It uses fairly large buffers, but the sizes of these can be tuned, and they are
-all allocated during program startup.
+It uses fairly large buffers. If you're short on memory, this may be an issue.
+But the sizes of these can be tuned at compile-time, and all buffers are
+allocated during program startup. There is no dynamic memory allocated after
+esp_init(), and there is none freed before esp_shutdown().
 
 
 Building ESP on Linux

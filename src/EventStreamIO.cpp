@@ -45,4 +45,5 @@ void RawEventWriter::Drain()
 	}
 	
 	stillBusy = !contextQueue->Empty();
+	std::this_thread::yield();
 }

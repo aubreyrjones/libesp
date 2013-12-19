@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 {
 	esp_init();
 	
-	for (int i = 0; i < 1000; i++){	
+	for (int i = 0; i < 10000; i++){	
 		esp_zone("outer");
 		//SimpleFunction();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
