@@ -85,8 +85,6 @@ Coming soon!
 Using ESP
 =========
 
-Now the part you've been waiting for. It's really easy.
-
 First, a note on strings: strings given to ESP should be in stable storage. The
 pointers to the strings themselves are used to establish identity. All strings
 given to ESP should not move or change contents between the time you call
@@ -97,6 +95,8 @@ of code. Each zone should have a meaningful name, and zones with the same name
 will be treated as equivalent within ESP. In general, it's easiest to give every
 zone a unique name--but, you can use the equivalence to your advantage in
 certain situations.
+
+Now the part you've been waiting for. It's really easy.
 
 To profile a section, surround it with esp_zone() and esp_end(). This will
 generate an ESP event timestamped at the moment esp_zone() was called, and with
