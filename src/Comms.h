@@ -12,7 +12,9 @@
 #define	COMMS_H
 
 namespace esp
-{	
+{
+	
+	
 	class EventStreamConsumer
 	{
 	protected:

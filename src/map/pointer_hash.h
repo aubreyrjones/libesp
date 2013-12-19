@@ -90,7 +90,9 @@ namespace devious
 					idx = (idx + 1) % capacity;
 				}
 				
-			} while (searchStart != idx);		
+			} while (searchStart != idx);
+			
+			return -1;
 		}
 		
 		int Lookup(PT ptr)
@@ -99,6 +101,7 @@ namespace devious
 			if (existing < 0){
 				return Put(ptr);
 			}
+			return existing;
 		}
 	};
 }

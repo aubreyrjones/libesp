@@ -103,13 +103,13 @@ bool SessionFileStore::WriteEvent(const ProfileEvent& event)
 {
 	sqlite3_reset(eventInsertStatement);
 	
-	sqlite3_bind_int64(eventInsertStatement, 1, event.id);
-	sqlite3_bind_int64(eventInsertStatement, 2, event.parentEventRef);
-	sqlite3_bind_int64(eventInsertStatement, 3, event.frameNumber);
-	sqlite3_bind_int64(eventInsertStatement, 4, event.timestamp);
-	sqlite3_bind_int(eventInsertStatement, 5, event.eventType);
-	sqlite3_bind_int64(eventInsertStatement, 6, event.value.i);
-	sqlite3_bind_int64(eventInsertStatement, 7, event.eventNameRef);
+	sqlite3_bind_int64(eventInsertStatement, 1, event.header.id);
+	sqlite3_bind_int64(eventInsertStatement, 2, event.data.parentEventRef);
+	sqlite3_bind_int64(eventInsertStatement, 3, event.data.frameNumber);
+	sqlite3_bind_int64(eventInsertStatement, 4, event.data.timestamp);
+	sqlite3_bind_int(eventInsertStatement, 5, event.header.eventType);
+	sqlite3_bind_int64(eventInsertStatement, 6, event.data.value.i);
+	sqlite3_bind_int64(eventInsertStatement, 7, event.data.eventNameRef);
 	
 	try_step:
 	int status = sqlite3_step(eventInsertStatement);

@@ -25,16 +25,16 @@ void ThreadContext::Zone(const char *zoneName)
 	if (!ev) {
 		return;
 	}
-	ev->id = _context->NextEventID();
-	ev->eventType = EV_ZONE_INTERVAL;
-	ev->timestamp = esp::_current_timestamp;
-	ev->frameNumber = _context->GetFrameNumber();
-	ev->eventNameRef = _context->MapStringToReference(zoneName);
+	ev->header.id = _context->NextEventID();
+	ev->header.eventType = EV_ZONE_INTERVAL;
+	ev->data.timestamp = esp::_current_timestamp;
+	ev->data.frameNumber = _context->GetFrameNumber();
+	ev->data.eventNameRef = _context->MapStringToReference(zoneName);
 	if (parentZone){
-		ev->parentEventRef = parentZone->id;
+		ev->data.parentEventRef = parentZone->header.id;
 	}
 	else {
-		ev->parentEventRef = 0;
+		ev->data.parentEventRef = 0;
 	}
 }
 
@@ -50,7 +50,7 @@ void ThreadContext::End()
 	}
 	
 	int64_t curtime = esp::_current_timestamp;
-	ev->value.ui = curtime - ev->timestamp;
+	ev->data.value.ui = curtime - ev->data.timestamp;
 	
 	if (!_context->eventQueue.TryEnqueue(*ev)){
 		printf("\n.over.\n");
