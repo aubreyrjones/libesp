@@ -23,9 +23,12 @@ namespace esp
 		ProfileEvent writeBuffer[espWriteBufferSize];
 		int writeBufferUsed;
 		
+		void WriteString(RuntimeStringReference& string);
+		
 	protected:
 		void Drain();
 		void Flush();
+		void FlushStrings();
 		
 	public:
 		RawEventWriter(const char *path);

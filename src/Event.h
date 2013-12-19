@@ -55,6 +55,10 @@ namespace esp
 	 */
 	struct ProfileEventData
 	{
+		/*
+		 * The ID of the thread on which this event was generated.
+		 */
+		uint32_t threadID;
 		
 		/**
 		 * A reference to the enclosing event, if this is a stacked event.

@@ -21,6 +21,26 @@ RawEventWriter::~RawEventWriter()
 	}
 }
 
+void RawEventWriter::WriteString(RuntimeStringReference& string)
+{
+	SerializedStringHeader header;
+	header.header.id = string.id;
+	header.header.eventType = EV_NEW_STRING;
+	header.length = strlen(string.ptr);
+	
+	fwrite(&header, sizeof(SerializedStringHeader), 1, outputFile);
+	fwrite(string.ptr, sizeof(char), header.length, outputFile);
+}
+
+void RawEventWriter::FlushStrings()
+{
+	RuntimeStringReference rsr;
+	
+	while (stringQueue.TryDequeue(&rsr)){
+		WriteString(rsr);
+	}
+}
+
 void RawEventWriter::Flush()
 {
 	int toWrite = writeBufferUsed;
@@ -32,7 +52,9 @@ void RawEventWriter::Flush()
 	}
 	while (toWrite > 0);
 
-	writeBufferUsed = 0;	
+	writeBufferUsed = 0;
+	
+	FlushStrings();
 }
 
 void RawEventWriter::Drain()
@@ -44,6 +66,8 @@ void RawEventWriter::Drain()
 		Flush();
 	}
 	
-	stillBusy = !contextQueue->Empty();
+	FlushStrings();
+	
+	stillBusy = !(contextQueue->Empty() && stringQueue.Empty());
 	std::this_thread::yield();
 }

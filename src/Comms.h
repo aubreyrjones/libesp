@@ -13,7 +13,7 @@
 
 namespace esp
 {
-	
+	typedef devious::LockessRingQueue<RuntimeStringReference, 4096> StringReferenceQueue;
 	
 	class EventStreamConsumer
 	{
@@ -22,6 +22,7 @@ namespace esp
 		std::thread drainThread;
 		std::atomic_bool runThread;
 		std::atomic_bool stillBusy;
+		StringReferenceQueue stringQueue;
 		
 		static void DrainThreadBounce(EventStreamConsumer *consumer);
 		
@@ -38,6 +39,10 @@ namespace esp
 		void StartDrainThread();
 		
 		void ShutdownAndWait();
+		
+		StringReferenceQueue* GetStringQueue() {
+			return &stringQueue;
+		};
 	};
 }
 

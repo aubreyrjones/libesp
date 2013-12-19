@@ -110,7 +110,24 @@ void ProfileContext::FrameEnd()
 
 uint32_t ProfileContext::MapStringToReference(const char* string)
 {
-	return strings.Lookup(string);
+	int index = strings.Get(string);
+	if (index >= 0){
+		return index;
+	}
+	
+	index = strings.Put(string);
+	
+	if (index < 0){
+		return -1; //error
+	}
+	
+	RuntimeStringReference stringRef;
+	stringRef.id = index;
+	stringRef.ptr = string;
+	
+	eventConsumer->GetStringQueue()->TryEnqueue(stringRef);
+	
+	return index;
 }
 
 uint32_t ProfileContext::NextEventID()

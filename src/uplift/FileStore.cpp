@@ -8,12 +8,13 @@ using namespace esp;
 static const char* CREATE_EVENT_TABLE_QUERY = 
 	"CREATE TABLE session_events ( "
 	"id INTEGER PRIMARY KEY, "
+	"eventType INTEGER, "
+	"threadID INTEGER, "
 	"parentEventRef INTEGER, "
 	"frameNumber INTEGER, "
 	"timestamp NUMERIC, "
-	"eventType INTEGER, "
-	"value NUMERIC,"
-	"eventNameRef INTEGER );";
+	"eventNameRef INTEGER, "
+	"value NUMERIC);";
 
 static const char* CREATE_STRING_TABLE_QUERY = 
 	"CREATE TABLE session_strings ( "
@@ -21,7 +22,7 @@ static const char* CREATE_STRING_TABLE_QUERY =
 	"value TEXT );";
 
 static const char* INSERT_EVENT_QUERY = 
-	"INSERT INTO session_events VALUES (?, ?, ?, ?, ?, ?, ?);";
+	"INSERT INTO session_events VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
 static const char* INSERT_STRING_QUERY = 
 	"INSERT INTO session_strings VALUES (?, ?);";
@@ -104,12 +105,13 @@ bool SessionFileStore::WriteEvent(const ProfileEvent& event)
 	sqlite3_reset(eventInsertStatement);
 	
 	sqlite3_bind_int64(eventInsertStatement, 1, event.header.id);
-	sqlite3_bind_int64(eventInsertStatement, 2, event.data.parentEventRef);
-	sqlite3_bind_int64(eventInsertStatement, 3, event.data.frameNumber);
-	sqlite3_bind_int64(eventInsertStatement, 4, event.data.timestamp);
-	sqlite3_bind_int(eventInsertStatement, 5, event.header.eventType);
-	sqlite3_bind_int64(eventInsertStatement, 6, event.data.value.i);
+	sqlite3_bind_int64(eventInsertStatement, 2, event.header.eventType);
+	sqlite3_bind_int64(eventInsertStatement, 3, event.data.threadID);
+	sqlite3_bind_int64(eventInsertStatement, 4, event.data.parentEventRef);
+	sqlite3_bind_int64(eventInsertStatement, 5, event.data.frameNumber);
+	sqlite3_bind_int64(eventInsertStatement, 6, event.data.timestamp);
 	sqlite3_bind_int64(eventInsertStatement, 7, event.data.eventNameRef);
+	sqlite3_bind_int64(eventInsertStatement, 8, event.data.value.ui);
 	
 	try_step:
 	int status = sqlite3_step(eventInsertStatement);
