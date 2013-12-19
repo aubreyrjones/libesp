@@ -16,10 +16,16 @@ extern "C"
 	 * Initialize the overall ESP context.
 	 * 
 	 * This also initializes the main thread's context.
-	 * @param sessionName The name of the session file to create.
-	 * @return 
+	 * 
+	 * sessionName is the name of the session to create. If a session name is given,
+	 * and addTimestamp is false, then the created session will simply be called
+	 * "sessionName.esp". If addTimestamp is true, then the session name will
+	 * be in the format "sessionName-YY-MM-DD-hhmm.esp".
+	 * 
+	 * If no sessionName is given, then the session name will simply be the 
+	 * timestamp "YY-MM-DD-hhmm.esp", regardless of the setting to addTimestamp.
 	 */
-	void esp_init(const char *sessionName);
+	void esp_init(const char *sessionName, bool addTimestamp);
 
 	/**
 	 * Shut down the overall ESP context and disconnect from servers or

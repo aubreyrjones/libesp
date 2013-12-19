@@ -19,7 +19,7 @@ void SimpleFunction()
 
 int main(int argc, char **argv)
 {
-	esp_init("test1.esp");
+	esp_init(nullptr, false);
 	
 	for (int i = 0; i < 1000; i++){	
 		esp_zone("outer");

@@ -1,14 +1,37 @@
+#include <ctime>
 #include "profile.h"
 #include "Context.h"
 #include "Timing.h"
 #include "EventStreamIO.h"
 
-void esp_init(const char *sessionName)
+static const int sessionNameBufferSize = 1024;
+
+void esp_init(const char *sessionName, bool addTimestamp)
 {
+	char sessionNameBuffer[sessionNameBufferSize];
+	std::time_t now = std::time(0);
+	std::tm time;
+	localtime_r(&now, &time);
+
+	char datestring[64];
+	std::strftime(datestring, 64, "%y-%m-%d-%H%M", &time);
+	
+	if (!sessionName){
+		snprintf(sessionNameBuffer, sessionNameBufferSize, "%s.esp", datestring);
+	}
+	else {
+		if (addTimestamp){
+			snprintf(sessionNameBuffer, sessionNameBufferSize, "%s-%s.esp", sessionName, datestring);
+		}
+		else {
+			snprintf(sessionNameBuffer, sessionNameBufferSize, "%s.esp", sessionName);
+		}
+	}
+	
 	esp::_context = new esp::ProfileContext;
 	esp_thread_init();
 	esp::StartTimestampUpdate();
-	esp::_context->StartDrain(new esp::RawEventWriter(sessionName));
+	esp::_context->StartDrain(new esp::RawEventWriter(sessionNameBuffer));
 }
 
 void esp_shutdown()

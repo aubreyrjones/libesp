@@ -20,7 +20,7 @@ void ThreadedFunction()
 
 int main(int argc, char **argv)
 {
-	esp_init("test2.esp");
+	esp_init("test2", false);
 	
 	std::thread threadA(ThreadedFunction), threadB(ThreadedFunction);
 	
