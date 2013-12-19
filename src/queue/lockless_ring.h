@@ -71,7 +71,7 @@ namespace devious {
 				if (modcap_eq(f + 1, b)){
 					return false; //full
 				}
-			} while (!front.compare_exchange_weak(f, f + 1, std::memory_order_release, std::memory_order_acquire));
+			} while (!front.compare_exchange_weak(f, f + 1, std::memory_order_release, std::memory_order_acquire)); //somebody beat us
 			
 			buffer[modcap(f)] = value;
 			readfront.fetch_add(1, std::memory_order_acq_rel);
