@@ -3,12 +3,12 @@
 #include "Timing.h"
 #include "EventStreamIO.h"
 
-void esp_init()
+void esp_init(const char *sessionName)
 {
 	esp::_context = new esp::ProfileContext;
 	esp_thread_init();
 	esp::StartTimestampUpdate();
-	esp::_context->StartDrain(new esp::RawEventWriter("session_stream.esp"));
+	esp::_context->StartDrain(new esp::RawEventWriter(sessionName));
 }
 
 void esp_shutdown()

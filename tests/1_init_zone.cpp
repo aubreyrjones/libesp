@@ -19,11 +19,11 @@ void SimpleFunction()
 
 int main(int argc, char **argv)
 {
-	esp_init();
+	esp_init("test1.esp");
 	
-	for (int i = 0; i < 10000; i++){	
+	for (int i = 0; i < 1000; i++){	
 		esp_zone("outer");
-		//SimpleFunction();
+		SimpleFunction();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		esp_end();
 		

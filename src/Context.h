@@ -11,11 +11,13 @@
 #include <stdint.h>
 #include <thread>
 #include <atomic>
+#include <unordered_map>
 
 #include "Event.h"
 #include "stack/slabstack.h"
 #include "Comms.h"
 #include "ESPConfig.h"
+#include "map/pointer_hash.h"
 
 #if (defined ESP_LINUX)
 #define ESP_TLS_DECL __thread
@@ -92,6 +94,8 @@ namespace esp
 		ThreadContext threadContexts[espMaxThreadCount];
 		
 		ProfileEventQueue eventQueue;
+		
+		devious::PointerHash<const char *, 16384> strings;
 	public:
 		
 		/**

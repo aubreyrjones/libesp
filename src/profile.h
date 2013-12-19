@@ -16,9 +16,10 @@ extern "C"
 	 * Initialize the overall ESP context.
 	 * 
 	 * This also initializes the main thread's context.
+	 * @param sessionName The name of the session file to create.
 	 * @return 
 	 */
-	void esp_init();
+	void esp_init(const char *sessionName);
 
 	/**
 	 * Shut down the overall ESP context and disconnect from servers or

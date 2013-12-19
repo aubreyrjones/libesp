@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "Event.h"
 #include "FileStore.h"
@@ -15,6 +16,11 @@ int main(int argc, char **argv)
 	esp::ProfileEvent pe;
 	
 	FILE* inFile = fopen(argv[1], "rb");
+	
+	if (!inFile){
+		printf("Cannot open file: %s\n", argv[1]);
+		exit(2);
+	}
 	
 	sfs.StartBulkInsert();
 	while (fread(&pe, sizeof(pe), 1, inFile))

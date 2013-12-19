@@ -110,7 +110,7 @@ void ProfileContext::FrameEnd()
 
 uint32_t ProfileContext::MapStringToReference(const char* string)
 {
-	return 0;
+	return strings.Lookup(string);
 }
 
 uint32_t ProfileContext::NextEventID()
