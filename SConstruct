@@ -24,11 +24,16 @@ elif esp_env['PLATFORM'] == 'win32':
     build_platform = 'win'
 elif esp_env['PLATFORM'] == 'darwin':
     esp_env.Replace(CXX = "clang")
-    build_64 = True
     build_platform = 'mac'
 
 esp_libs = []
 
+#==================LIBRARIES=============
+if build_platform == 'posix':
+    esp_libs = ['rt', 'pthread', 'dl']
+
+
+#=================COMPILER FLAGS=========
 def add_linux_common_build_options(environ):
     environ.AppendUnique(CPPDEFINES = ['ESP_LINUX'])
     environ.AppendUnique(CCFLAGS = Split('-fPIC'))
@@ -40,8 +45,7 @@ def add_linux_common_build_options(environ):
         environ.AppendUnique(CCFLAGS = Split('-O3'))
     
 
-if build_platform == 'posix':
-    esp_libs = ['rt', 'pthread', 'dl']
+if build_platform == 'posix':    
     add_linux_common_build_options(esp_env)
     uplift_env = esp_env.Clone()
     esp_env.AppendUnique(CXXFLAGS = Split('-fno-exceptions'))

@@ -135,3 +135,5 @@ void ProfileContext::PrintStatus()
 {
 	printf("Outstanding events: %d\n", eventQueue.GetSize());
 }
+
+
