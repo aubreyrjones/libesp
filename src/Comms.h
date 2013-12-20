@@ -20,8 +20,8 @@ namespace esp
 	protected:
 		ProfileEventQueue *contextQueue;
 		std::thread drainThread;
-		std::atomic_bool runThread;
-		std::atomic_bool stillBusy;
+		bool runThread;
+		bool stillBusy;
 		StringReferenceQueue stringQueue;
 		
 		static void DrainThreadBounce(EventStreamConsumer *consumer);
