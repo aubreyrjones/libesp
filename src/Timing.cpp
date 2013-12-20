@@ -28,10 +28,11 @@ void update_timestamp_thread(void)
 {
 	esp::_current_timestamp = 0;
 	
+	::SetThreadAffinityMask(::GetCurrentThread(), 1);
+	
 	const int64_t clockFrequency = GetPerformanceCounterFrequency();
 	const int64_t minTicks = clockFrequency / 1000000;
 	
-	printf("PerformanceTimer frequency: %lld\n", clockFrequency);
 	if (clockFrequency == 0 || minTicks == 0){
 		printf("PerformanceTimer frequency below 1MHz. Aborting timestamp thread. Profile data from this run is useless.\n");
 		return;
@@ -57,7 +58,7 @@ void update_timestamp_thread(void)
 			tickAccumulator = 0;
 		}
 		
-		std::this_thread::yield();
+		
 	}
 }
 
