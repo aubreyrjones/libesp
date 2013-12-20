@@ -9,7 +9,7 @@
 
 #ifndef PROFILE_H
 #define	PROFILE_H
-
+#ifndef NO_ESP
 extern "C"
 {
 	/**
@@ -79,6 +79,26 @@ extern "C"
 	void esp_sample_uint(const char *probeName, const uint32_t& value);
 	void esp_sample_float(const char *probeName, const float& value);
 }
+#else
+extern "C"
+{
+#define esp_init(const char *sessionName, bool addTimestamp)
+
+#define esp_shutdown()
+
+#define esp_thread_init()
+	
+#define esp_frame_end()
+
+#define esp_zone(const char *zoneName)
+
+#define esp_end()
+
+#define esp_sample_int(const char *probeName, const int32_t& value)
+#define esp_sample_uint(const char *probeName, const uint32_t& value)
+#define esp_sample_float(const char *probeName, const float& value)
+}
+#endif
 
 #ifdef __cplusplus
 
