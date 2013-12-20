@@ -82,7 +82,7 @@ extern "C"
 #else
 extern "C"
 {
-#define esp_init(const char *sessionName, bool addTimestamp)
+#define esp_init(sessionName, addTimestamp)
 
 #define esp_shutdown()
 
@@ -94,9 +94,9 @@ extern "C"
 
 #define esp_end()
 
-#define esp_sample_int(const char *probeName, const int32_t& value)
-#define esp_sample_uint(const char *probeName, const uint32_t& value)
-#define esp_sample_float(const char *probeName, const float& value)
+#define esp_sample_int(probeName, value)
+#define esp_sample_uint(probeName, value)
+#define esp_sample_float(probeName, value)
 }
 #endif
 
