@@ -49,9 +49,11 @@ def add_linux_common_build_options(environ):
     
 def add_windows_common_build_options(environ):
     environ.AppendUnique(CPPDEFINES = ['ESP_WINDOWS', 'HAVE_READLINE=0'])
-    environ.AppendUnique(CCFLAGS = Split('/GR- /EHsc'))
+    environ.AppendUnique(CCFLAGS = Split('/GR- /EHsc /MD'))
     if build_debug:
         environ.AppendUnique(CCFLAGS = Split('/Z7'))
+    else:
+        environ.AppendUnique(CCFLAGS = Split('/O2'))
 
 
 if build_platform == 'posix':    

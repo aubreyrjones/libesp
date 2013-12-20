@@ -36,4 +36,6 @@ int main(int argc, char **argv)
 	threadB.join();
 	
 	esp_shutdown();
+	
+	return 0;
 }

@@ -35,6 +35,8 @@ void update_timestamp_thread(void)
 	int64_t lastSampledTime;
 	int64_t currentSampledTime;
 	
+	printf("Clock Frequency : %lld\n", clockFrequency);
+	
 	currentSampledTime = GetPerformanceCounterTime();
 	
 	while (esp::_run_timestamp_thread){
@@ -45,9 +47,11 @@ void update_timestamp_thread(void)
 		delta *= 1000000;
 		delta /= clockFrequency;
 		
+		//printf("Delta : %lld\n", delta);
+		
 		esp::_current_timestamp += delta;
 		
-		std::this_thread::yield();
+		//std::this_thread::yield();
 	}
 }
 
