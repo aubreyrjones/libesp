@@ -28,28 +28,36 @@ void update_timestamp_thread(void)
 {
 	esp::_current_timestamp = 0;
 	
-	int64_t clockFrequency = GetPerformanceCounterFrequency();
+	const int64_t clockFrequency = GetPerformanceCounterFrequency();
+	const int64_t minTicks = clockFrequency / 1000000;
+	
+	printf("PerformanceTimer frequency: %lld\n", clockFrequency);
+	if (clockFrequency == 0 || minTicks == 0){
+		printf("PerformanceTimer frequency below 1MHz. Aborting timestamp thread. Profile data from this run is useless.\n");
+		return;
+	}
 	
 	int64_t lastSampledTime;
 	int64_t currentSampledTime;
 	
-	printf("Clock Frequency : %lld\n", clockFrequency);
 	
 	currentSampledTime = GetPerformanceCounterTime();
+	
+	int64_t tickAccumulator = 0;
 	
 	while (esp::_run_timestamp_thread){
 		lastSampledTime = currentSampledTime;
 		currentSampledTime = GetPerformanceCounterTime();
 		
-		int64_t delta = currentSampledTime - lastSampledTime;
-		delta *= 1000000;
-		delta /= clockFrequency;
+		tickAccumulator += currentSampledTime - lastSampledTime;
+		if (tickAccumulator > minTicks){
+			tickAccumulator *= 1000000;
+			tickAccumulator /= clockFrequency;
+			esp::_current_timestamp += tickAccumulator;
+			tickAccumulator = 0;
+		}
 		
-		//printf("Delta : %lld\n", delta);
-		
-		esp::_current_timestamp += delta;
-		
-		//std::this_thread::yield();
+		std::this_thread::yield();
 	}
 }
 
