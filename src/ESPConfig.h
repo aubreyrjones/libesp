@@ -1,4 +1,4 @@
-/* 
+/* 	
  * File:   ESPConfig.h
  * Author: aubrey
  *
@@ -33,6 +33,11 @@ namespace esp {
 		espWriteBufferThresholdPrecompute = espWriteBufferSize - espWriteBufferThreshold,
 	};
 }
+
+#ifdef ESP_WINDOWS
+	#define snprintf _snprintf
+	
+#endif
 
 #endif	/* ESPCONFIG_H */
 
