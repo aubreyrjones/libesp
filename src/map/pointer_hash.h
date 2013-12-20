@@ -31,7 +31,7 @@ namespace devious
 	struct PointerHashEntry
 	{
 		std::atomic<PT> ptr;
-		std::atomic_int value;
+		std::atomic<uint_fast32_t> value;
 		
 		PointerHashEntry()
 		{
@@ -46,12 +46,12 @@ namespace devious
 	{
 	private:
 		PointerHashEntry<PT> table[capacity];
-		std::atomic_int nextIndex;
+		std::atomic<uint_fast32_t> nextIndex;
 	
 	public:
 		PointerHash() : nextIndex(0) {};
 		
-		int Put(PT ptr)
+		uint32_t Put(PT ptr)
 		{
 			uint64_t searchStart = HashInteger64(ptr) % capacity;
 			uint64_t idx = searchStart;
@@ -85,7 +85,7 @@ next_step:
 			return -1;
 		}
 		
-		int Get(PT ptr)
+		uint32_t Get(PT ptr)
 		{
 			uint64_t searchStart = HashInteger64(ptr) % capacity;
 			uint64_t idx = searchStart;
@@ -107,7 +107,7 @@ next_step:
 			return -1;
 		}
 		
-		int Lookup(PT ptr)
+		uint32_t Lookup(PT ptr)
 		{
 			int existing = Get(ptr);
 			if (existing < 0){

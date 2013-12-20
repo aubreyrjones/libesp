@@ -7,10 +7,9 @@
 
 
 #include <stdint.h>
-
-#if (defined ESP_LINUX)
-#include <pthread.h>
-#endif
+#include <atomic>
+#include <thread>
+#include <stdint.h>
 
 #ifndef TIMING_H
 #define	TIMING_H
@@ -21,7 +20,10 @@ namespace esp
 
 	void StopTimestampUpdate();
 	
-	extern int64_t _current_timestamp;
+	extern std::atomic<int_fast64_t> _current_timestamp;
+	extern bool _run_timestamp_thread;
+	extern std::thread _timerThread;
+
 }	
 
 #endif	/* TIMING_H */

@@ -75,22 +75,22 @@ namespace esp
 		/**
 		 * How many different threads have called esp_thread_init()?
 		 */
-		std::atomic_uint_fast32_t threadCount;
+		std::atomic<uint_fast32_t> threadCount;
 		
 		/**
 		 * The next sequential message id.
 		 */
-		std::atomic_uint_fast32_t nextMessageID;
+		std::atomic<uint_fast32_t> nextMessageID;
 	
 		/**
 		 * The current frame number.
 		 */
-		std::atomic_uint_fast32_t frameNumber;
+		std::atomic<uint_fast32_t> frameNumber;
 		
 		/**
 		 * The timestamp of the current frame.
 		 */
-		std::atomic_uint_fast64_t frameTimestamp;
+		std::atomic<uint_fast64_t> frameTimestamp;
 		
 		EventStreamConsumer *eventConsumer;
 		

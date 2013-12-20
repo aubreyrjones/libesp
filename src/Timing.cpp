@@ -1,15 +1,33 @@
 #include "Timing.h"
 using namespace esp;
 
-int64_t esp::_current_timestamp = 0;
+std::atomic<int_fast64_t> esp::_current_timestamp(0);
+bool esp::_run_timestamp_thread = true;
+std::thread esp::_timerThread;
+
+//#define ESP_WINDOWS
+//#undef ESP_LINUX
+
+#if (defined ESP_WINDOWS)
+
+#include <Windows.h>
+
+void update_timestamp_thread(void)
+{
+	LARGE_INTEGER localTimestamp;
+	
+	while (esp::_run_timestamp_thread){
+		QueryPerformanceCounter(&localTimestamp);
+		
+	}
+}
+
+#endif
 
 #if (defined ESP_LINUX)
 
 #include <time.h>
 #include <stdio.h>
-
-static pthread_t _timestamp_update_thread;
-static bool _run_timestamp_thread = true;
 
 int64_t TimespecToLinearMicroseconds(const struct timespec& spec)
 {
@@ -27,9 +45,8 @@ void AddMicroseconds(struct timespec *spec, int nMicroseconds)
 	}
 }
 
-void* update_timestamp_thread(void *)
+void update_timestamp_thread(void)
 {
-
 	struct timespec lastTimeSpec;
 	struct timespec targetTimeSpec;
 	
@@ -37,12 +54,12 @@ void* update_timestamp_thread(void *)
 	
 	int64_t startTime = TimespecToLinearMicroseconds(lastTimeSpec);
 	
-	while (_run_timestamp_thread)
+	while (esp::_run_timestamp_thread)
 	{
 		clock_gettime(CLOCK_MONOTONIC, &lastTimeSpec);
 		
 		//current time in microseconds
-		_current_timestamp = TimespecToLinearMicroseconds(lastTimeSpec) - startTime;
+		esp::_current_timestamp = TimespecToLinearMicroseconds(lastTimeSpec) - startTime;
 	
 		targetTimeSpec = lastTimeSpec;
 		AddMicroseconds(&targetTimeSpec, 1); //2 microsecond resolution.
@@ -51,16 +68,12 @@ void* update_timestamp_thread(void *)
 	}
 }
 
+#endif
+
 bool esp::StartTimestampUpdate()
 {
-	int status;
-	
-	status = pthread_create(&_timestamp_update_thread, nullptr, update_timestamp_thread, nullptr);
-	if (status){
-		perror("Cannot start timing thread");
-		return false;
-	}
-	
+	_run_timestamp_thread = true;
+	_timerThread = std::thread(update_timestamp_thread);
 	return true;
 }
 
@@ -68,5 +81,3 @@ void esp::StopTimestampUpdate()
 {
 	_run_timestamp_thread = false;
 }
-
-#endif

@@ -16,7 +16,7 @@ namespace devious {
 	{
 	private:
 		T buffer[capacity + 1];
-		std::atomic_int back, front, readfront;
+		std::atomic<int> back, front, readfront;
 		
 		inline int modcap(int i)
 		{
