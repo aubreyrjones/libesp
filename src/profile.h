@@ -90,7 +90,7 @@ extern "C"
 	
 #define esp_frame_end()
 
-#define esp_zone(const char *zoneName)
+#define esp_zone(zoneName)
 
 #define esp_end()
 
