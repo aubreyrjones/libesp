@@ -12,13 +12,42 @@ std::thread esp::_timerThread;
 
 #include <Windows.h>
 
+int64_t GetPerformanceCounterFrequency()
+{
+	LARGE_INTEGER queryQWORD;
+	QueryPerformanceFrequency(&queryQWORD);
+	return queryQWORD.QuadPart;
+}
+
+int64_t GetPerformanceCounterTime()
+{
+	LARGE_INTEGER queryQWORD;
+	QueryPerformanceCounter(&queryQWORD);
+	return queryQWORD.QuadPart;
+}
+
 void update_timestamp_thread(void)
 {
-	LARGE_INTEGER localTimestamp;
+	esp::_current_timestamp = 0;
+	
+	int64_t clockFrequency = GetPerformanceCounterFrequency();
+	
+	int64_t lastSampledTime;
+	int64_t currentSampledTime;
+	
+	currentSampledTime = GetPerformanceCounterTime();
 	
 	while (esp::_run_timestamp_thread){
-		QueryPerformanceCounter(&localTimestamp);
+		lastSampledTime = currentSampledTime;
+		currentSampledTime = GetPerformanceCounterTime();
 		
+		int64_t delta = currentSampledTime - lastSampledTime;
+		delta *= 1000000;
+		delta /= clockFrequency;
+		
+		esp::_current_timestamp += delta;
+		
+		std::this_thread::yield();
 	}
 }
 
