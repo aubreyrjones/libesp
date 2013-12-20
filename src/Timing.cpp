@@ -5,8 +5,6 @@ std::atomic<int_fast64_t> esp::_current_timestamp(0);
 bool esp::_run_timestamp_thread = true;
 std::thread esp::_timerThread;
 
-#define ESP_WINDOWS
-#undef ESP_LINUX
 
 #if (defined ESP_WINDOWS)
 
