@@ -5,8 +5,6 @@ std::atomic<int_fast64_t> esp::_current_timestamp(0);
 bool esp::_run_timestamp_thread = true;
 std::thread esp::_timerThread;
 
-#define ESP_WINDOWS
-#undef ESP_LINUX
 
 #if (defined ESP_WINDOWS)
 
@@ -30,10 +28,11 @@ void update_timestamp_thread(void)
 {
 	esp::_current_timestamp = 0;
 	
+	::SetThreadAffinityMask(::GetCurrentThread(), 1);
+	
 	const int64_t clockFrequency = GetPerformanceCounterFrequency();
 	const int64_t minTicks = clockFrequency / 1000000;
 	
-	printf("PerformanceTimer frequency: %lld\n", clockFrequency);
 	if (clockFrequency == 0 || minTicks == 0){
 		printf("PerformanceTimer frequency below 1MHz. Aborting timestamp thread. Profile data from this run is useless.\n");
 		return;
@@ -59,7 +58,7 @@ void update_timestamp_thread(void)
 			tickAccumulator = 0;
 		}
 		
-		std::this_thread::yield();
+		
 	}
 }
 

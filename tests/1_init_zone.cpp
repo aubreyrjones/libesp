@@ -2,8 +2,10 @@
 #include "profile.h"
 #include "Context.h"
 
+
 #include <chrono>
 #include <thread>
+#include <Windows.h>
 
 void SimpleFunction()
 {
