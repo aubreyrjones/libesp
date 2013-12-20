@@ -79,7 +79,10 @@ sqlite_sources = uplift_env.FilteredGlob("#/src/sqlite3/*.c", ["shell.c"])
 sqlite_objects = uplift_env.Object(sqlite_sources)
 
 sqlite_shell_object = uplift_env.Object(["#/src/sqlite3/shell.c"])
-sqlite_shell = uplift_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs + ['readline'])
+sqlite_libs = esp_libs
+if build_platform == "posix":
+    sqlite_libs = sqlite_libs + ['readline']
+sqlite_shell = uplift_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=sqlite_libs)
 
 uplift_sources = uplift_env.Glob("#/src/uplift/*.cpp")
 uplift_objects = uplift_env.Object(uplift_sources)
