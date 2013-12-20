@@ -5,6 +5,10 @@
 *.dblite
 *.pyc
 *.esp
+*.obj
+*.pdb
+*.lib
+*.exe
 tests/test*
 libesp.so
 sqlite

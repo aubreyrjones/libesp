@@ -48,7 +48,7 @@ def add_linux_common_build_options(environ):
         environ.AppendUnique(CCFLAGS = Split('-O3'))
     
 def add_windows_common_build_options(environ):
-    environ.AppendUnique(CPPDEFINES = ['ESP_WINDOWS'])
+    environ.AppendUnique(CPPDEFINES = ['ESP_WINDOWS', 'HAVE_READLINE=0'])
     environ.AppendUnique(CCFLAGS = Split('/GR- /EHsc'))
     if build_debug:
         environ.AppendUnique(CCFLAGS = Split('/Z7'))
@@ -79,7 +79,10 @@ sqlite_sources = uplift_env.FilteredGlob("#/src/sqlite3/*.c", ["shell.c"])
 sqlite_objects = uplift_env.Object(sqlite_sources)
 
 sqlite_shell_object = uplift_env.Object(["#/src/sqlite3/shell.c"])
-sqlite_shell = uplift_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=esp_libs + ['readline'])
+sqlite_libs = esp_libs
+if build_platform == "posix":
+    sqlite_libs = sqlite_libs + ['readline']
+sqlite_shell = uplift_env.Program("sqlite", sqlite_objects + sqlite_shell_object, LIBS=sqlite_libs)
 
 uplift_sources = uplift_env.Glob("#/src/uplift/*.cpp")
 uplift_objects = uplift_env.Object(uplift_sources)

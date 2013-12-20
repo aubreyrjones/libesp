@@ -3,6 +3,7 @@
 #include "Context.h"
 #include "Timing.h"
 #include "EventStreamIO.h"
+#include "ESPConfig.h"
 
 static const int sessionNameBufferSize = 1024;
 
@@ -11,7 +12,11 @@ void esp_init(const char *sessionName, bool addTimestamp)
 	char sessionNameBuffer[sessionNameBufferSize];
 	std::time_t now = std::time(0);
 	std::tm time;
+#if (defined ESP_WINDOWS)
+	localtime_s(&time, &now);
+#elif (defined ESP_LINUX)
 	localtime_r(&now, &time);
+#endif
 
 	char datestring[64];
 	std::strftime(datestring, 64, "%y-%m-%d-%H%M", &time);
