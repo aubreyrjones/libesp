@@ -5,7 +5,6 @@
 
 #include <chrono>
 #include <thread>
-#include <Windows.h>
 
 void SimpleFunction()
 {

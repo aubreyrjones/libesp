@@ -74,6 +74,7 @@ esp_sources = esp_env.Glob("#/src/*.cpp")
 esp_objects = esp_env.Object(esp_sources)
 
 esp_lib = esp_env.Library("esp", esp_objects, LIBS=esp_libs)
+esp_env.Install("#/prebuilt/", esp_lib)
 
 #==============UTILITY PROGRAMS======================
 
