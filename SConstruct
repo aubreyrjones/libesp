@@ -1,4 +1,6 @@
 import os.path
+import platform
+
 esp_env = Environment(tools=['default','textfile'], CPPPATH=['#/src'])
 esp_env['STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME']=1
 uplift_env = None #different build parameters for programs/libs on different systems
@@ -22,6 +24,7 @@ if esp_env['PLATFORM'] == 'posix':
     build_platform = 'posix'
 elif esp_env['PLATFORM'] == 'win32':
     build_platform = 'win'
+    esp_env['ENV'] = os.environ
 elif esp_env['PLATFORM'] == 'darwin':
     esp_env.Replace(CXX = "clang")
     build_platform = 'mac'
@@ -44,6 +47,12 @@ def add_linux_common_build_options(environ):
     else:
         environ.AppendUnique(CCFLAGS = Split('-O3'))
     
+def add_windows_common_build_options(environ):
+    environ.AppendUnique(CPPDEFINES = ['ESP_WINDOWS'])
+    environ.AppendUnique(CCFLAGS = Split('/GR- /EHsc'))
+    if build_debug:
+        environ.AppendUnique(CCFLAGS = Split('/Z7'))
+
 
 if build_platform == 'posix':    
     add_linux_common_build_options(esp_env)
@@ -52,6 +61,10 @@ if build_platform == 'posix':
     
     esp_env.AppendUnique(CXXFLAGS = Split('-fno-exceptions'))
     esp_env.AppendUnique(LINKFLAGS = Split('-fno-exceptions'))
+    
+elif build_platform == 'win':
+    add_windows_common_build_options(esp_env)
+    uplift_env = esp_env.Clone()
     
 #==============ESP STATIC LIBRARY===================
 
