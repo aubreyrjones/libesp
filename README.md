@@ -143,12 +143,6 @@ there's a little bit of boilerplate.
 At the start of your program, before you call any esp_zone() or esp_sample_*()
 functions, you need to call esp_init(). This sets up the global profiling context.
 
-For each thread you spawn in your program (and for which you would like
-profiling information), you must call esp_thread_init(). This sets up the
-thread-local profiling context. This function is called automatically for you in
-the main thread by the esp_init() function, so you need only invoke it in
-additional threads.
-
 During the course of your program, in the main loop, you need to call
 esp_frame_end() at the end of each iteration. 
 
