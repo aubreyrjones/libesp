@@ -60,25 +60,40 @@ void esp_frame_end()
 
 void esp_zone(const char *zoneName)
 {
+	if (!esp::_thread_context){
+		esp_thread_init();
+	}
 	esp::_thread_context->Zone(zoneName);
 }
 
 void esp_end()
 {
+	if (!esp::_thread_context){
+		esp_thread_init();
+	}
 	esp::_thread_context->End();
 }
 
 void esp_sample_int(const char *probeName, const int32_t& value)
 {
+	if (!esp::_thread_context){
+		esp_thread_init();
+	}
 	esp::_thread_context->Sample(probeName, value);
 }
 
 void esp_sample_uint(const char *probeName, const uint32_t& value)
 {
+	if (!esp::_thread_context){
+		esp_thread_init();
+	}
 	esp::_thread_context->Sample(probeName, value);
 }
 
 void esp_sample_float(const char *probeName, const float& value)
 {
+	if (!esp::_thread_context){
+		esp_thread_init();
+	}
 	esp::_thread_context->Sample(probeName, value);
 }

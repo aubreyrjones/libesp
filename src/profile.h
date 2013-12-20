@@ -80,5 +80,24 @@ extern "C"
 	void esp_sample_float(const char *probeName, const float& value);
 }
 
+#ifdef __cplusplus
+
+namespace esp
+{
+	struct Z
+	{
+		Z(const char *zoneName)
+		{
+			esp_zone(zoneName);
+		};
+		
+		~Z()
+		{
+			esp_end();
+		}
+	};
+}
+#endif
+
 #endif	/* PROFILE_H */
 
