@@ -6,8 +6,8 @@
 using namespace esp;
 
 static const char* CREATE_EVENT_TABLE_QUERY = 
-	"CREATE TABLE session_events ( "
-	"id INTEGER PRIMARY KEY, "
+	"CREATE TABLE events ( "
+	"event_id INTEGER PRIMARY KEY, "
 	"eventType INTEGER, "
 	"threadID INTEGER, "
 	"parentEventRef INTEGER, "
@@ -17,15 +17,15 @@ static const char* CREATE_EVENT_TABLE_QUERY =
 	"value NUMERIC);";
 
 static const char* CREATE_STRING_TABLE_QUERY = 
-	"CREATE TABLE session_strings ( "
-	"id INTEGER PRIMARY KEY, "
+	"CREATE TABLE strings ( "
+	"string_id INTEGER PRIMARY KEY, "
 	"value TEXT );";
 
 static const char* INSERT_EVENT_QUERY = 
-	"INSERT INTO session_events VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+	"INSERT INTO events VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
 static const char* INSERT_STRING_QUERY = 
-	"INSERT INTO session_strings VALUES (?, ?);";
+	"INSERT INTO strings VALUES (?, ?);";
 
 SessionFileStore::SessionFileStore(const char* databaseFilename) : db(nullptr)
 {
