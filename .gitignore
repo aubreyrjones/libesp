@@ -1,6 +1,5 @@
 *.sqlite-journal
 *.sqlite
-*.a
 *.o
 *.dblite
 *.pyc
@@ -10,6 +9,7 @@
 *.lib
 *.exe
 tests/test*
-libesp.so
-sqlite
-esp_uplift
+/libesp.so
+/libesp.a
+/sqlite
+/esp_uplift
