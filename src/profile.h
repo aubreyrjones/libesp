@@ -107,7 +107,6 @@ extern "C"
 #define esp_set_paused(shouldPause) 
 
 #define esp_is_paused() true
-
 	
 #define esp_end()
 
