@@ -49,7 +49,11 @@ int main(int argc, char **argv)
 		printf("USAGE: esp_uplift SESSION_FILE\n");
 	}
 	
-	esp::SessionFileStore sfs("session_stream.sqlite");
+	char outFileName[1024];
+	
+	snprintf(outFileName, 1024, "%s.sqlite", argv[1]);
+	
+	esp::SessionFileStore sfs(outFileName);
 	sfs.Initialize();
 	
 	FILE* inFile = fopen(argv[1], "rb");
