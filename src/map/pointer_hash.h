@@ -95,7 +95,7 @@ next_step:
 				if (probedKey == ptr){
 					return table[idx].value.load(std::memory_order_acquire);
 				}
-				else if (probedKey == 0){
+				else if (!probedKey){
 					return -1;
 				}
 				else {

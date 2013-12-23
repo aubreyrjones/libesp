@@ -53,7 +53,7 @@ namespace esp
 		
 	public:
 		
-		ThreadContext() : 	threadIndex(threadIndex), profileIntervalStack(espMaxZoneRecursion) {};
+		ThreadContext() : threadIndex(0), profileIntervalStack(espMaxZoneRecursion) {};
 		ThreadContext(int32_t threadIndex);
 		
 		void Zone(const char *zoneName);
@@ -165,6 +165,7 @@ namespace esp
 	
 	extern ESP_TLS_DECL ThreadContext* _thread_context;
 	extern ProfileContext* _context;
+	extern bool _paused;
 }
 #endif	/* CONTEXT_H */
 

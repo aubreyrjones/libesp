@@ -89,6 +89,8 @@ namespace devious {
 			
 			*out = buffer[modcap(b)];
 			back.store(b + 1, std::memory_order_release);
+			
+			return true;
 		}
 		
 		int TryDequeue(T* out, int maxOut)

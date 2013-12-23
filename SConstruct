@@ -40,12 +40,12 @@ if build_platform == 'posix':
 def add_linux_common_build_options(environ):
     environ.AppendUnique(CPPDEFINES = ['ESP_LINUX'])
     environ.AppendUnique(CCFLAGS = Split('-fPIC'))
-    environ.AppendUnique(CXXFLAGS = Split('-m64 -std=c++11 -pedantic -fno-rtti'))
+    environ.AppendUnique(CXXFLAGS = Split('-m64 -Wall -std=c++11 -pedantic -fno-rtti'))
     environ.AppendUnique(LINKFLAGS = Split('-rdynamic -fno-rtti'))
     if build_debug:
         environ.AppendUnique(CCFLAGS = Split('-g'))
     else:
-        environ.AppendUnique(CCFLAGS = Split('-O3'))
+        environ.AppendUnique(CCFLAGS = Split('-g -O3'))
     
 def add_windows_common_build_options(environ):
     environ.AppendUnique(CPPDEFINES = ['ESP_WINDOWS', 'HAVE_READLINE=0'])
@@ -103,7 +103,3 @@ if build_tests:
     for s in test_scripts:
         rval = SConscript(s)
         Depends(rval, esp_lib)
-
-
-
-

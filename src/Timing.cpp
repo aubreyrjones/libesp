@@ -120,4 +120,8 @@ bool esp::StartTimestampUpdate()
 void esp::StopTimestampUpdate()
 {
 	_run_timestamp_thread = false;
+	if (_timerThread.joinable()){
+		_timerThread.join();
+	}
 }
+

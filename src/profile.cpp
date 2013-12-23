@@ -39,6 +39,17 @@ void esp_init(const char *sessionName, bool addTimestamp)
 	esp::_context->StartDrain(new esp::RawEventWriter(sessionNameBuffer));
 }
 
+
+void esp_set_paused(bool shouldPause)
+{
+	esp::_paused = shouldPause;
+}
+
+bool esp_is_paused()
+{
+	return esp::_paused;
+}
+
 void esp_shutdown()
 {
 	esp::_context->PrintStatus();
@@ -60,6 +71,8 @@ void esp_frame_end()
 
 void esp_zone(const char *zoneName)
 {
+	if (esp::_paused) return;
+	
 	if (!esp::_thread_context){
 		esp_thread_init();
 	}
@@ -68,6 +81,8 @@ void esp_zone(const char *zoneName)
 
 void esp_end()
 {
+	if (esp::_paused) return;
+	
 	if (!esp::_thread_context){
 		esp_thread_init();
 	}
@@ -76,6 +91,8 @@ void esp_end()
 
 void esp_sample_int(const char *probeName, const int32_t& value)
 {
+	if (esp::_paused) return;
+	
 	if (!esp::_thread_context){
 		esp_thread_init();
 	}
@@ -84,6 +101,8 @@ void esp_sample_int(const char *probeName, const int32_t& value)
 
 void esp_sample_uint(const char *probeName, const uint32_t& value)
 {
+	if (esp::_paused) return;
+	
 	if (!esp::_thread_context){
 		esp_thread_init();
 	}
@@ -92,6 +111,8 @@ void esp_sample_uint(const char *probeName, const uint32_t& value)
 
 void esp_sample_float(const char *probeName, const float& value)
 {
+	if (esp::_paused) return;
+	
 	if (!esp::_thread_context){
 		esp_thread_init();
 	}

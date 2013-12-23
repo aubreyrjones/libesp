@@ -52,8 +52,6 @@ int main(int argc, char **argv)
 	esp::SessionFileStore sfs("session_stream.sqlite");
 	sfs.Initialize();
 	
-	esp::ProfileEvent pe;
-	
 	FILE* inFile = fopen(argv[1], "rb");
 	
 	if (!inFile){
