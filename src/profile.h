@@ -9,6 +9,7 @@
 
 #ifndef PROFILE_H
 #define	PROFILE_H
+
 #ifndef NO_ESP
 extern "C"
 {
@@ -51,6 +52,17 @@ extern "C"
      */
 	void esp_frame_end();
 
+	/**
+	 * Pause ESP events.
+     */
+	void esp_set_paused(bool shouldPause);
+	
+	/**
+	 * Is ESP event recording currently paused?
+     * @return Whether or not ESP is currently paused.
+     */
+	bool esp_is_paused();
+	
 	/**
 	 * Starts a new profiling zone by pushing it onto the interval stack.
 	 * 

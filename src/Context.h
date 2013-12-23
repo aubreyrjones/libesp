@@ -165,6 +165,7 @@ namespace esp
 	
 	extern ESP_TLS_DECL ThreadContext* _thread_context;
 	extern ProfileContext* _context;
+	extern bool _paused;
 }
 #endif	/* CONTEXT_H */
 

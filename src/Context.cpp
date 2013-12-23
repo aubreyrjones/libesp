@@ -6,6 +6,7 @@ using namespace esp;
 
 ESP_TLS_DECL ThreadContext* esp::_thread_context = nullptr;
 ProfileContext* esp::_context = nullptr;
+bool esp::_paused = false;
 
 ThreadContext::ThreadContext(int32_t threadIndex) :
 	threadIndex(threadIndex),
