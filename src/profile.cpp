@@ -81,6 +81,8 @@ void esp_zone(const char *zoneName)
 
 void esp_end()
 {
+	if (esp::_paused) return;
+	
 	if (!esp::_thread_context){
 		esp_thread_init();
 	}
