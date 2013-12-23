@@ -172,7 +172,9 @@ uint32_t ProfileContext::MapStringToReference(const char* string)
 	stringRef.id = index;
 	stringRef.ptr = string;
 	
-	eventConsumer->GetStringQueue()->TryEnqueue(stringRef);
+	if (!eventConsumer->GetStringQueue()->TryEnqueue(stringRef)){
+		printf("String overflow.\n");
+	}
 	
 	return index;
 }
