@@ -130,7 +130,6 @@ extern "C"
 #endif
 
 #ifdef __cplusplus
-
 namespace esp
 {
 	struct Z
@@ -146,6 +145,14 @@ namespace esp
 		}
 	};
 }
+
+
+#ifndef NO_ESP
+#define esp_Z(zoneName) esp::Z _esp_function_profile_guard(zoneName)
+#else
+#define esp_Z(zoneName) 
+#endif
+
 #endif
 
 #endif	/* PROFILE_H */
