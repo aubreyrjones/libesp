@@ -13,3 +13,4 @@ tests/test*
 /libesp.a
 /sqlite
 /esp_uplift
+/prebuilt

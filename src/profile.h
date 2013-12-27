@@ -10,6 +10,19 @@
 #ifndef PROFILE_H
 #define	PROFILE_H
 
+#if (defined ESP_WINDOWS)
+	#if (defined ESP_EXPORT)
+		#define ESP_API_DECL __declspec(dllexport)
+	#elif (defined ESP_IMPORT)
+		#define ESP_API_DECL __declspec(dllimport)
+	#else
+		#define ESP_API_DECL 
+	#endif
+#else
+#define ESP_API_DECL 
+#endif
+
+
 #ifndef NO_ESP
 extern "C"
 {
@@ -26,13 +39,13 @@ extern "C"
 	 * If no sessionName is given, then the session name will simply be the 
 	 * timestamp "YY-MM-DD-hhmm.esp", regardless of the setting to addTimestamp.
 	 */
-	void esp_init(const char *sessionName, bool addTimestamp);
+	ESP_API_DECL void esp_init(const char *sessionName, bool addTimestamp);
 
 	/**
 	 * Shut down the overall ESP context and disconnect from servers or
 	 * local storage.
 	 */
-	void esp_shutdown();
+	ESP_API_DECL void esp_shutdown();
 
 	/**
 	 * Call this at least once in each thread before submitting zones or
@@ -44,24 +57,24 @@ extern "C"
 	 * so, however. In general, strive to call this only once for
 	 * each thread created.
 	 */
-	void esp_thread_init();
+	ESP_API_DECL void esp_thread_init();
 	
 	/**
 	 * Call this once per "frame" (whatever that means in your context), at
 	 * the end of the frame.
      */
-	void esp_frame_end();
+	ESP_API_DECL void esp_frame_end();
 
 	/**
 	 * Pause ESP events.
      */
-	void esp_set_paused(bool shouldPause);
+	ESP_API_DECL void esp_set_paused(bool shouldPause);
 	
 	/**
 	 * Is ESP event recording currently paused?
      * @return Whether or not ESP is currently paused.
      */
-	bool esp_is_paused();
+	ESP_API_DECL bool esp_is_paused();
 	
 	/**
 	 * Starts a new profiling zone by pushing it onto the interval stack.
@@ -72,13 +85,13 @@ extern "C"
 	 * The identity of the string pointer itself is used to compare
 	 * identity of zones.
 	 */
-	void esp_zone(const char *zoneName);
+	ESP_API_DECL void esp_zone(const char *zoneName);
 
 	/**
 	 * Ends the last declared profiling zone by popping the top of the 
 	 * interval stack and emitting the corresponding ZONE_INTERVAL event.
 	 */
-	void esp_end();
+	ESP_API_DECL void esp_end();
 
 	/**
 	 * Sample any given value by inserting a PROBE_* event into the 
@@ -87,9 +100,9 @@ extern "C"
 	 * probes, so use a string literal or other consolidated string.
 	 * @param value The value of the probe to 
 	 */
-	void esp_sample_int(const char *probeName, const int32_t& value);
-	void esp_sample_uint(const char *probeName, const uint32_t& value);
-	void esp_sample_float(const char *probeName, const float& value);
+	ESP_API_DECL void esp_sample_int(const char *probeName, const int32_t& value);
+	ESP_API_DECL void esp_sample_uint(const char *probeName, const uint32_t& value);
+	ESP_API_DECL void esp_sample_float(const char *probeName, const float& value);
 }
 #else
 extern "C"
