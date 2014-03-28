@@ -13,7 +13,7 @@
 
 namespace esp
 {
-	typedef devious::LockessRingQueue<RuntimeStringReference, 4096> StringReferenceQueue;
+	typedef devious::LocklessRingQueue<RuntimeStringReference, 4096> StringReferenceQueue;
 	
 	class EventStreamConsumer
 	{

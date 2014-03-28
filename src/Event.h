@@ -120,7 +120,7 @@ namespace esp
 		uint32_t length;
 	};
 	
-	typedef devious::LockessRingQueue<ProfileEvent, esp::espMaxEventBuffer> ProfileEventQueue;
+	typedef devious::LocklessRingQueue<ProfileEvent, esp::espMaxEventBuffer> ProfileEventQueue;
 
 }
 #endif	/* EVENT_H */

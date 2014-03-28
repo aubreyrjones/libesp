@@ -12,7 +12,7 @@
 namespace devious {
 
 	template <typename T, int capacity>
-	class LockessRingQueue 
+	class LocklessRingQueue 
 	{
 	private:
 		T buffer[capacity + 1];
@@ -29,7 +29,7 @@ namespace devious {
 		}
 	public:
 
-		LockessRingQueue() : back(0), front(0), readfront(0) {
+		LocklessRingQueue() : back(0), front(0), readfront(0) {
 		};
 
 		
